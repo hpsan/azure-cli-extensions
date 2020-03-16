@@ -28,15 +28,12 @@ def load_command_table(self, _):
     with self.command_group('sentinel detection', sentinel_sdk) as g:
         g.custom_command('create', 'create_detection')
         g.custom_command('update', 'create_detection')
-        g.custom_command('list', 'list_detections')
-        g.command('delete', 'delete_detection')
-        g.show_command('show', 'get_detection')
+        g.command('list', 'list')
+        g.command('delete', 'delete')
+        g.show_command('show', 'get')
 
     with self.command_group('sentinel detection', cmd_util) as g:
         g.command('validate', 'validate_detection')
-
-        # g.generic_update_command('update', setter_name='update', custom_func_name='update_sentinel')
-
 
     with self.command_group('sentinel', is_preview=True):
         pass

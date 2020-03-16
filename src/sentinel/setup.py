@@ -36,7 +36,8 @@ CLASSIFIERS = [
 
 # TODO: Add any additional SDK dependencies here
 DEPENDENCIES = [
-    'azure-cli-core'
+    'azure-cli-core',
+    'jsonschema'
 ]
 
 with open('README.rst', 'r', encoding='utf-8') as f:

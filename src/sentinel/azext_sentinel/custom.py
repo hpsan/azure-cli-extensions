@@ -51,16 +51,3 @@ def validate_detection(detections_folder=None,
                 alert_rule = yaml.safe_load(detection_file_stream)
                 jsonschema.validate(schema, alert_rule)
     print('Successfully Validated!')
-
-
-def list_detections(cmd, client, resource_group_name, workspace_name):
-    return client.alert_rules.list(resource_group_name=resource_group_name, workspace_name=workspace_name)
-
-
-def delete_detection(cmd, client, resource_group_name, workspace_name, detection_id):
-    client.alert_rules.delete()
-    pass
-
-
-def get_detection():
-    pass

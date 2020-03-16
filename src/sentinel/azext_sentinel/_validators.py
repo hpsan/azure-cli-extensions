@@ -18,3 +18,6 @@ def example_name_or_id_validator(cmd, namespace):
                 type='storageAccounts',
                 name=namespace.storage_account
             )
+def detection_input_validator(cmd, namespace):
+    # import pdb; pdb.set_trace()
+    pass
