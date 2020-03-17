@@ -9,7 +9,7 @@ description: 'cliAlert'
 display_name: 'CliAlertDescription'
 enabled: True
 tactics: [
-'Persistence'
+'PrivilegeEscalation'
 ]
 suppression_duration: 'P10D'
 suppression_enabled: True

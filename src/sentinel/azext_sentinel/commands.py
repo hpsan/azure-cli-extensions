@@ -4,6 +4,7 @@
 # --------------------------------------------------------------------------------------------
 
 # pylint: disable=line-too-long
+from azext_sentinel._validators import detection_input_validator
 from azure.cli.core.commands import CliCommandType
 from azext_sentinel._client_factory import cf_sentinel
 
@@ -26,14 +27,15 @@ def load_command_table(self, _):
     )
 
     with self.command_group('sentinel detection', sentinel_sdk) as g:
-        g.custom_command('create', 'create_detection')
-        g.custom_command('update', 'create_detection')
+        g.custom_command('create', 'create_detections', validator=detection_input_validator)
+        g.custom_command('update', 'create_detections', validator=detection_input_validator)
         g.command('list', 'list')
         g.command('delete', 'delete')
         g.show_command('show', 'get')
 
     with self.command_group('sentinel detection', cmd_util) as g:
-        g.command('validate', 'validate_detection')
+        g.command('validate', 'validate_detections')
+        g.command('generate', 'generate_detection')
 
     with self.command_group('sentinel', is_preview=True):
         pass
