@@ -18,8 +18,7 @@ def load_command_table(self, _):
         exception_handler=resource_exception_handler
     )
     cmd_util = CliCommandType(
-        operations_tmpl='azext_sentinel.custom#{}',
-        exception_handler=resource_exception_handler
+        operations_tmpl='azext_sentinel.custom#{}'
     )
 
     with self.command_group('sentinel detection', sentinel_sdk) as g:

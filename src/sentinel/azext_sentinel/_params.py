@@ -40,7 +40,7 @@ def load_arguments(self, _):
         c.argument('skip_interactive', options_list=['--skip-interactive'],
                    arg_type=get_three_state_flag(), help='Enable/Disable interactive detection creation')
         # TODO: Add all detection configurations as arguments here
-        c.argument('display_name', options_list=['--display-name'])
+        c.argument('name', options_list=['--name', '-n'])
         c.argument('create_directory', options_list=['--create-dir'],
                    arg_type=get_three_state_flag(), help='Enable/Disable creating new directory for the detection')
         c.argument('with_documentation', options_list=['--with-documentation', '--doc'],

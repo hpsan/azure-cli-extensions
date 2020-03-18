@@ -2,12 +2,12 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
-import os
-import unittest
+import tempfile
 from pathlib import Path
 
 import yaml
 from azure.cli.testsdk import (ScenarioTest, ResourceGroupPreparer, create_random_name)
+from jsonschema import ValidationError
 
 TEST_ROOT_PATH = Path(__file__).parent
 TEST_RESOURCE_GROUP_PREFIX = 'test_sentinel_rg_'
@@ -78,11 +78,22 @@ class SentinelScenarioTest(ScenarioTest):
         validate_cmd_template = 'az sentinel detection validate -d {}'
         try:
             self.cmd(validate_cmd_template.format(TEST_VALID_DETECTIONS_FOLDER))
-        except:
+        except ValidationError:
             raise AssertionError('Validation failed unexpectedly')
-        self.cmd(validate_cmd_template.format(TEST_INVALID_DETECTIONS_FOLDER))
-        import pdb; pdb.set_trace()
+        with self.assertRaises(ValidationError) as v:
+            self.cmd(validate_cmd_template.format(TEST_INVALID_DETECTIONS_FOLDER))
         self.assertEqual(True, True)
+
+    def test_sentinel_detection_generate(self):
+        generate_cmd_template = 'az sentinel detection generate -n {} -d {} --skip-interactive'
+        detection_name = create_random_name()
+        with tempfile.TemporaryDirectory() as generated_detections_folder:
+            self.cmd(generate_cmd_template.format(detection_name, generated_detections_folder))
+            detection_file = Path(generated_detections_folder) / detection_name / (detection_name + '.yaml')
+            detection_documentation = Path(generated_detections_folder) / detection_name / (detection_name + '.md')
+            generated_detection = yaml.safe_load(detection_file.read_text())
+            self.assertEquals(generated_detection['display_name'], detection_name)
+            self.assertTrue(detection_documentation.exists())
 
     def _get_sentinel_detection(self, detection_id):
         get_cmd_template = 'az sentinel detection show -g {} -n {} --rule-id {}'

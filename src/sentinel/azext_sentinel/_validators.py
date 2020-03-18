@@ -12,5 +12,5 @@ def detection_create_validator(namespace):
 
 def detection_generate_validator(namespace):
     if bool(namespace.skip_interactive):
-        if not bool(namespace.display_name):
-            raise CLIError('incorrect usage: --display-name DETECTION_NAME')
+        if not bool(namespace.name):
+            raise CLIError('incorrect usage: --name DETECTION_NAME')

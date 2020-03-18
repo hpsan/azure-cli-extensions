@@ -54,33 +54,32 @@ def validate_detections(
     for file in detection_files:
         logger.info('Validating detection %s with schema at %s', file, detection_schema_file)
         alert_rule = yaml.safe_load(file.read_text())
-        import pdb; pdb.set_trace()
-        jsonschema.validate(schema, alert_rule)
+        jsonschema.validate(alert_rule, schema)
     logger.info('All validations successful!')
 
 
 def generate_detection(
         detections_directory: Union[str, None] = None,
         skip_interactive: bool = False,
-        display_name: Union[str, None] = None,
+        name: Union[str, None] = None,
         create_directory: bool = True,
         with_documentation: bool = True
 ) -> None:
     # Populate values for the detection
     if not skip_interactive:
-        if not display_name:
-            display_name = prompt("Name your detection: ")
+        if not name:
+            name = prompt("Name your detection: ")
         if not create_directory:
             create_directory = prompt_y_n("Would you like to create a new directory for your detection?")
         if not with_documentation:
             with_documentation = prompt_y_n("Would you like to create a documentation file for your detection?")
     detections_directory: str = detections_directory if detections_directory else os.getcwd()
-    detection_file_name: str = display_name + '.yaml'
-    detection_config: str = DEFAULT_DETECTION_TEMPLATE.format(str(uuid.uuid4()), display_name, display_name)
+    detection_file_name: str = name + '.yaml'
+    detection_config: str = DEFAULT_DETECTION_TEMPLATE.format(str(uuid.uuid4()), name, name)
 
     # Setup detection directory
     if create_directory:
-        directory_path: Path = Path(detections_directory) / display_name
+        directory_path: Path = Path(detections_directory) / name
         directory_path.mkdir()
     else:
         directory_path: Path = Path(detections_directory)
@@ -89,7 +88,7 @@ def generate_detection(
     detection_file: Path = directory_path / detection_file_name
     detection_file.write_text(detection_config)
     if with_documentation:
-        _create_documentation(DOCUMENTATION_TEMPLATE, display_name, directory_path)
+        _create_documentation(DOCUMENTATION_TEMPLATE, name, directory_path)
 
 
 def _get_detection_files(

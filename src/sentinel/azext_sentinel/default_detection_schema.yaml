@@ -6,7 +6,7 @@ properties:
   id:
     title: Detection ID
     description: Unique ID specific to a detection
-    type: uuid
+    type: string
     examples:
       - 5b8d86f5-26a8-49b8-ba37-b35286e485ef
   query_frequency:
@@ -44,7 +44,7 @@ properties:
   trigger_threshold:
     title: Trigger Threshold
     description: The threshold triggers this detection
-    type: int
+    type: integer
   description:
     title: Description
     description: The description of this detection
