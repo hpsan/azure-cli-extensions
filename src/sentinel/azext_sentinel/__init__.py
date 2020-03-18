@@ -12,12 +12,12 @@ class SentinelCommandsLoader(AzCommandsLoader):
 
     def __init__(self, cli_ctx=None):
         from azure.cli.core.commands import CliCommandType
-        from azext_sentinel._client_factory import cf_sentinel
+        from azext_sentinel._client_factory import cf_sentinel_alert_rules
         sentinel_custom = CliCommandType(
             operations_tmpl='azext_sentinel.custom#{}',
-            client_factory=cf_sentinel)
+            client_factory=cf_sentinel_alert_rules)
         super(SentinelCommandsLoader, self).__init__(cli_ctx=cli_ctx,
-                                                  custom_command_type=sentinel_custom)
+                                                     custom_command_type=sentinel_custom)
 
     def load_command_table(self, args):
         from azext_sentinel.commands import load_command_table

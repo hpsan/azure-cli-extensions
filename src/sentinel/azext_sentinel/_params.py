@@ -26,7 +26,7 @@ def load_arguments(self, _):
     with self.argument_context('sentinel detection create') as c:
         c.argument('detections_directory', detections_directory_type)
         c.argument('detection_file', detection_file_type)
-        c.argument('enable_validation', options_list=['--enable-validation', '-vl'],
+        c.argument('enable_validation', options_list=['--enable-validation'],
                    arg_type=get_three_state_flag(), help='Enable/Disable detection validation before deploying it')
         c.argument('detection_schema', detection_schema_type)
 
@@ -37,8 +37,8 @@ def load_arguments(self, _):
 
     with self.argument_context('sentinel detection generate') as c:
         c.argument('detections_directory', detections_directory_type)
-        c.argument('interactive', arg_type=get_three_state_flag(),
-                   help='Enable/Disable interactive detection creation')
+        c.argument('skip_interactive', options_list=['--skip-interactive'],
+                   arg_type=get_three_state_flag(), help='Enable/Disable interactive detection creation')
         # TODO: Add all detection configurations as arguments here
         c.argument('display_name', options_list=['--display-name'])
         c.argument('create_directory', options_list=['--create-dir'],

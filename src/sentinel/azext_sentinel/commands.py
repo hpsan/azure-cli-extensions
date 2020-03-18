@@ -4,39 +4,34 @@
 # --------------------------------------------------------------------------------------------
 
 # pylint: disable=line-too-long
-from azext_sentinel._validators import detection_input_validator
 from azure.cli.core.commands import CliCommandType
-from azext_sentinel._client_factory import cf_sentinel
+from azext_sentinel._validators import detection_create_validator, detection_generate_validator
+from azext_sentinel._client_factory import cf_sentinel_alert_rules
+from azext_sentinel._exception_handler import resource_exception_handler
 
 
 def load_command_table(self, _):
-    """
-    az sentinel detection generate scaffold --detection-dir $detectionDir --detection-name $detectionName
-    az sentinel detection validate --detection-dir $detectionDir --detection-schema --$detectionSchema
-    az sentinel detection validate --detection-file $detectionFile  --detection-schema --$detectionSchema
-    az sentinel detection create --detection-dir $detectionDir --resource-group $ResourceGroup --workspace $Workspace
-    az sentinel detection create --detection-file $detectionFile --resource-group $ResourceGroup --workspace $Workspace
-    az sentinel detection run-query --detection-id $detectionName --resource-group $ResourceGroup --workspace $Workspace
-    """
 
     sentinel_sdk = CliCommandType(
         operations_tmpl='azext_sentinel.vendored_sdks.operations#AlertRulesOperations.{}',
-        client_factory=cf_sentinel)
+        client_factory=cf_sentinel_alert_rules,
+        exception_handler=resource_exception_handler
+    )
     cmd_util = CliCommandType(
-        operations_tmpl='azext_sentinel.custom#{}'
+        operations_tmpl='azext_sentinel.custom#{}',
+        exception_handler=resource_exception_handler
     )
 
     with self.command_group('sentinel detection', sentinel_sdk) as g:
-        g.custom_command('create', 'create_detections', validator=detection_input_validator)
-        g.custom_command('update', 'create_detections', validator=detection_input_validator)
-        g.command('list', 'list')
+        g.custom_command('create', 'create_detections', validator=detection_create_validator)
+        g.custom_command('update', 'create_detections', validator=detection_create_validator)
+        g.command('show', 'get')
         g.command('delete', 'delete')
-        g.show_command('show', 'get')
+        g.command('list', 'list')
 
     with self.command_group('sentinel detection', cmd_util) as g:
         g.command('validate', 'validate_detections')
-        g.command('generate', 'generate_detection')
+        g.command('generate', 'generate_detection', validator=detection_generate_validator)
 
     with self.command_group('sentinel', is_preview=True):
         pass
-

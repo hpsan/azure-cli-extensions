@@ -1,0 +1,21 @@
+id: 5b8d86f5-26a8-49b8-ba37-b35286e485ei
+
+query_frequency: 'P5D'
+query_period: 'P5D'
+severity: 'Low'
+trigger_operator: 'GreaterThan'
+trigger_threshold: 5
+description: 'cliAlert'
+display_name: 'CliAlertDescription'
+enabled: True
+tactics: [
+'PrivilegeEscalation'
+]
+suppression_duration: 'P10D'
+suppression_enabled: True
+query: |
+  datatable (SomeInt:int, SomeString:string) [
+    100, "Foo",
+    200, "Bar",
+  ]
+  | limit 1
