@@ -7,9 +7,9 @@ from azure.cli.core.commands.client_factory import get_mgmt_service_client
 from azext_sentinel.vendored_sdks import SecurityInsights
 
 
-def _cf_sentinel(cli_ctx):
+def cf_sentinel(cli_ctx, *_):
     return get_mgmt_service_client(cli_ctx, SecurityInsights)
 
 
 def cf_sentinel_alert_rules(cli_ctx, *_):
-    return _cf_sentinel(cli_ctx).alert_rules
+    return cf_sentinel(cli_ctx).alert_rules

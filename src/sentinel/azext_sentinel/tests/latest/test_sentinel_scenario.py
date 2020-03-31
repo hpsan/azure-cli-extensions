@@ -19,8 +19,8 @@ TEST_LOCATION = 'eastus'
 
 # See test_sentinel.yaml for details
 # TODO: Load recorded constants from the recorded files
-RECORDED_RESOURCE_GROUP = 'test_sentinel_rg_64mxd4n'
-RECORDED_WORKSPACE_NAME = 'clitestujg5ppbphcm46hdzt'
+RECORDED_RESOURCE_GROUP = 'test_sentinel_rg_ynj2ma2'
+RECORDED_WORKSPACE_NAME = 'clitestqj4gb4eg7f3g7ycef'
 
 
 class SentinelScenarioTest(ScenarioTest):

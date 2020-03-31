@@ -37,6 +37,7 @@ CLASSIFIERS = [
 # TODO: Add any additional SDK dependencies here
 DEPENDENCIES = [
     'azure-cli-core',
+    'azure-mgmt-logic',
     'jsonschema'
 ]
 

@@ -9,8 +9,10 @@ from typing import List, Union, Generator
 
 import yaml
 import jsonschema
-from azext_sentinel.vendored_sdks.models import AlertRule
-from azext_sentinel.vendored_sdks.operations import AlertRulesOperations
+from azure.cli.core.commands.client_factory import get_mgmt_service_client
+from azure.mgmt.logic import LogicManagementClient
+from azext_sentinel.vendored_sdks import SecurityInsights
+from azext_sentinel.vendored_sdks.models import AlertRule, ActionResponse, ActionRequest, ActionResponsePaged
 
 from .constants import DEFAULT_DETECTION_SCHEMA, DOCUMENTATION_TEMPLATE, DEFAULT_DETECTION_TEMPLATE
 from knack.log import get_logger
@@ -21,10 +23,12 @@ from .vendored_sdks.models import ScheduledAlertRule
 
 logger = get_logger(__name__)
 
+SENTINEL_POST_ALERT_TRIGGER_PATH = '/triggers/When_a_response_to_an_Azure_Sentinel_alert_is_triggered/paths/invoke'
+
 
 def create_detections(
-        cmd,  # pylint: disable=unused-argument
-        client: AlertRulesOperations,
+        cmd,
+        client: SecurityInsights,
         resource_group_name: str,
         workspace_name: str,
         detections_directory: Union[str, None] = None,
@@ -32,14 +36,18 @@ def create_detections(
         detection_schema: Union[str, None] = None,
         enable_validation: bool = False
 ) -> List[AlertRule]:
+    security_insights_client = client
+    playbook_client: LogicManagementClient = get_mgmt_service_client(cmd.cli_ctx, LogicManagementClient)
+
     if enable_validation:
-        validate_detections(detections_directory, detection_schema)
+        validate_detections(detection_file, detections_directory, detection_schema)
+
     detection_files = _get_detection_files(detection_file, detections_directory)
     deployed_detections = []
-
     for file in detection_files:
         deployed_detections.append(
-            _create_or_update_detection(client, resource_group_name, workspace_name, file))
+            _create_or_update_detection(
+                security_insights_client, playbook_client, resource_group_name, workspace_name, file))
     return deployed_detections
 
 
@@ -48,6 +56,7 @@ def validate_detections(
         detection_file: Union[str, None] = None,
         detection_schema: Union[str, None] = None
 ) -> None:
+    ## TODO: check if there are detections with the same ID
     detection_schema_file = detection_schema if detection_schema else DEFAULT_DETECTION_SCHEMA
     schema = yaml.safe_load(detection_schema_file.read_text())
     detection_files = _get_detection_files(detection_file, detections_directory)
@@ -104,31 +113,106 @@ def _get_detection_files(
 
 
 def _create_or_update_detection(
-        client: AlertRulesOperations,
+        security_insights_client: SecurityInsights,
+        playbook_client: LogicManagementClient,
         resource_group_name: str,
         workspace_name: str,
         detection_file: Path
-) -> Union[AlertRule, None]:
+) -> AlertRule:
     alert_rule = yaml.safe_load(detection_file.read_text())
+    alert_playbook_name = alert_rule.pop('playbook_name', None)
     # Fetch the existing rule to update if it already exists
     try:
-        existing_rule = client.get(resource_group_name,
-                                   workspace_name,
-                                   alert_rule['id'])
+        existing_rule = security_insights_client.alert_rules.get(resource_group_name,
+                                                                 workspace_name,
+                                                                 alert_rule['id'])
         alert_rule['etag'] = existing_rule.etag
     except CloudError:
         pass
+    # Create the rule
     try:
         alert = ScheduledAlertRule(**alert_rule)
-        created_alert: Union[AlertRule, None] = client.create_or_update(
+        created_alert: AlertRule = security_insights_client.alert_rules.create_or_update(
             resource_group_name,
             workspace_name,
             alert_rule['id'],
             alert)
     except CloudError as azCloudError:
-        created_alert = None
         logger.error('Unable to create/update the detection %s due to %s', detection_file, str(azCloudError))
+        raise azCloudError
+    # Link the playbook if it is configured
+    if alert_playbook_name:
+        _link_playbook(
+            security_insights_client,
+            playbook_client,
+            resource_group_name,
+            workspace_name,
+            alert_rule['id'],
+            alert_playbook_name
+        )
+    else:
+        _unlink_all_playbooks(
+            security_insights_client,
+            resource_group_name,
+            workspace_name,
+            alert_rule['id']
+        )
+
     return created_alert
+
+
+def _link_playbook(
+        security_insights_client: SecurityInsights,
+        playbook_client: LogicManagementClient,
+        resource_group_name: str,
+        workspace_name: str,
+        rule_id: str,
+        playbook_name: str
+) -> ActionResponse:
+    previously_linked_playbooks: List[ActionResponse] = security_insights_client.actions.list_by_alert_rule(
+        resource_group_name,
+        workspace_name,
+        rule_id
+    ).advance_page()
+    if len(previously_linked_playbooks) == 1 and previously_linked_playbooks[0].name == playbook_name:
+        linked_playbook: ActionResponse = previously_linked_playbooks[0]
+    else:
+        _unlink_all_playbooks(security_insights_client, resource_group_name, workspace_name, rule_id)
+        playbook = playbook_client.workflows.get(resource_group_name, playbook_name)
+        trigger_uri = playbook.access_endpoint + SENTINEL_POST_ALERT_TRIGGER_PATH
+        action_request = ActionRequest(
+            logic_app_resource_id=playbook.id,
+            trigger_uri=trigger_uri,
+        )
+        linked_playbook = security_insights_client.alert_rules.create_or_update_action(
+            resource_group_name,
+            workspace_name,
+            rule_id,
+            playbook_name,
+            action_request
+        )
+        return linked_playbook
+
+
+def _unlink_all_playbooks(
+        security_insights_client: SecurityInsights,
+        resource_group_name: str,
+        workspace_name: str,
+        rule_id: str
+):
+    linked_playbooks: List[ActionResponse] = security_insights_client.actions.list_by_alert_rule(
+        resource_group_name,
+        workspace_name,
+        rule_id
+    ).advance_page()
+    for linked_playbook in linked_playbooks:
+        security_insights_client.alert_rules.delete_action(
+            resource_group_name,
+            workspace_name,
+            rule_id,
+            linked_playbook.name
+        )
+    return
 
 
 def _create_documentation(

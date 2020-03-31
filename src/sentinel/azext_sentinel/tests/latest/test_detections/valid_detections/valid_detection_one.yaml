@@ -1,6 +1,6 @@
-id: 5b8d86f5-26a8-49b8-ba37-b35286e485ey
+id: 5b8d86f5-26a8-49b8-ba37-b35286e485hy
 
-query_frequency: 'P5D'
+query_frequency: 'PT5H'
 query_period: 'P5D'
 severity: 'Low'
 trigger_operator: 'GreaterThan'
@@ -11,8 +11,9 @@ enabled: True
 tactics: [
 'PrivilegeEscalation'
 ]
-suppression_duration: 'P10D'
+suppression_duration: 'P1D'
 suppression_enabled: True
+playbook_name: Playbook3
 query: |
   datatable (SomeInt:int, SomeString:string) [
     100, "Foo",

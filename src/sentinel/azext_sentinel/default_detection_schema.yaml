@@ -85,6 +85,10 @@ properties:
     title: Suppression Enabled
     description: Determines whether the suppression for this detection is enabled or disabled
     type: boolean
+  playbook_name:
+    title: Playbook Name
+    description: Name of the playbook that should be triggered if the detection is triggered
+    type: string
   query:
     title: Detection Query
     description: The query that creates alerts for this detection

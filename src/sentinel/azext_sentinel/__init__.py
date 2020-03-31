@@ -12,10 +12,10 @@ class SentinelCommandsLoader(AzCommandsLoader):
 
     def __init__(self, cli_ctx=None):
         from azure.cli.core.commands import CliCommandType
-        from azext_sentinel._client_factory import cf_sentinel_alert_rules
+        from azext_sentinel._client_factory import cf_sentinel
         sentinel_custom = CliCommandType(
             operations_tmpl='azext_sentinel.custom#{}',
-            client_factory=cf_sentinel_alert_rules)
+            client_factory=cf_sentinel)
         super(SentinelCommandsLoader, self).__init__(cli_ctx=cli_ctx,
                                                      custom_command_type=sentinel_custom)
 

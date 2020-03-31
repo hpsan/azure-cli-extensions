@@ -8,7 +8,7 @@ DEFAULT_DETECTION_TEMPLATE: str = """
 id: {}
 
 # The period (in ISO 8601 duration format) that this detection looks at
-query_frequency: P1D
+query_frequency: PT5M
 
 # Add query period in ISO 8601 duration format
 query_period: P1D
@@ -38,13 +38,17 @@ enabled: True
 # Options: InitialAccess, Execution, Persistence, PrivilegeEscalation, DefenseEvasion, CredentialAccess, Discovery,
 #          LateralMovement, Collection, Exfiltration, CommandAndControl, Impact
 tactics:
-  - # Add tactics here
+  - <Add tactics here>
 
 # The suppression (in ISO 8601 duration format) to wait since last time this detection been triggered
 suppression_duration: 'P10D'
 
 # Determines whether the suppression for this detection is enabled or disabled
 suppression_enabled: True
+
+# Playbook to be run automatically when your detection generates an alert.
+# example - playbook_name: 'PostAlertActions-SentinelTrigger'
+playbook_name: <Add playbook name here>
 
 # The KQL query that creates alerts for this detection
 # Read aka.ms/kql to learn how to write KQL queries
