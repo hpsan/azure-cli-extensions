@@ -60,5 +60,6 @@ setup(
     classifiers=CLASSIFIERS,
     packages=find_packages(),
     install_requires=DEPENDENCIES,
+    include_package_data=True,
     package_data={'azext_sentinel': ['azext_metadata.json']},
 )

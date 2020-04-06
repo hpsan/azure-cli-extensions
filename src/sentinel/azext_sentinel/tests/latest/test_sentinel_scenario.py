@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 from azure.cli.testsdk import (ScenarioTest, ResourceGroupPreparer, create_random_name)
-from jsonschema import ValidationError
+from knack.util import CLIError
 
 TEST_ROOT_PATH = Path(__file__).parent
 TEST_RESOURCE_GROUP_PREFIX = 'test_sentinel_rg_'
@@ -78,9 +78,9 @@ class SentinelScenarioTest(ScenarioTest):
         validate_cmd_template = 'az sentinel detection validate -d {}'
         try:
             self.cmd(validate_cmd_template.format(TEST_VALID_DETECTIONS_FOLDER))
-        except ValidationError:
+        except CLIError:
             raise AssertionError('Validation failed unexpectedly')
-        with self.assertRaises(ValidationError) as v:
+        with self.assertRaises(CLIError) as v:
             self.cmd(validate_cmd_template.format(TEST_INVALID_DETECTIONS_FOLDER))
         self.assertEqual(True, True)
 

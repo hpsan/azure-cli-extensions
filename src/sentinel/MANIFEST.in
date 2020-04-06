@@ -1,0 +1,2 @@
+include azext_sentinel/default_detection_schema.yaml
+include azext_sentinel/detection_documentation_template.md

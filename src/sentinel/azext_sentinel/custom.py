@@ -13,6 +13,8 @@ from azure.cli.core.commands.client_factory import get_mgmt_service_client
 from azure.mgmt.logic import LogicManagementClient
 from azext_sentinel.vendored_sdks import SecurityInsights
 from azext_sentinel.vendored_sdks.models import AlertRule, ActionResponse, ActionRequest, ActionResponsePaged
+from jsonschema import ValidationError
+from knack.util import CLIError
 
 from .constants import DEFAULT_DETECTION_SCHEMA, DOCUMENTATION_TEMPLATE, DEFAULT_DETECTION_TEMPLATE
 from knack.log import get_logger
@@ -63,7 +65,10 @@ def validate_detections(
     for file in detection_files:
         logger.info('Validating detection %s with schema at %s', file, detection_schema_file)
         alert_rule = yaml.safe_load(file.read_text())
-        jsonschema.validate(alert_rule, schema)
+        try:
+            jsonschema.validate(alert_rule, schema)
+        except ValidationError as validationError:
+            raise CLIError(validationError.message)
     logger.info('All validations successful!')
 
 
