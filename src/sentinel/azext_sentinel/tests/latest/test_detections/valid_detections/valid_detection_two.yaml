@@ -8,9 +8,10 @@ trigger_threshold: 5
 description: 'cliAlert'
 display_name: 'CliAlertDescription'
 enabled: True
-tactics: [
-'PrivilegeEscalation'
-]
+tactics:
+- 'PrivilegeEscalation'
+- 'InitialAccess'
+
 suppression_duration: 'P1D'
 suppression_enabled: True
 query: |

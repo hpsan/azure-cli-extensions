@@ -9,6 +9,12 @@ from typing import List, Union, Generator
 
 import yaml
 import jsonschema
+from importlib import reload
+import azure
+import sys
+sys.path.insert(0, str(Path.home()) + '/.azure/cliextensions/sentinel')
+
+reload(azure)
 from azure.cli.core.commands.client_factory import get_mgmt_service_client
 from azure.mgmt.logic import LogicManagementClient
 from azext_sentinel.vendored_sdks import SecurityInsights
