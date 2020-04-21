@@ -1,0 +1,19 @@
+# Unique name to identify this data source
+name: {name}
+# Description for this data source
+description: <PLACEHOLDER>
+# Configuration for the parser function
+parser:
+  # Unique ID to identify this parser function
+  function_id: {unique_id}
+  # Display name for this parser function. Should look like AWSCloudTrail_Normalized
+  display_name: <PLACEHOLDER>
+  # KQL query that parses the raw source and outputs normalized data
+  # Should look something like - "SecurityEvent | take 1"
+  query: |
+    SecurityEvent
+    | limit 10
+# Additional metadata required by your organization
+additional_metadata:
+  # Azure DevOps Work Item ID this data source is linked to.
+  workitem_id: <PLACEHOLDER>

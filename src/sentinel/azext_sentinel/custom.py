@@ -7,31 +7,23 @@ import uuid
 from pathlib import Path
 from typing import List, Union, Generator
 
-import yaml
 import jsonschema
-from importlib import reload
-import azure
-import sys
-sys.path.insert(0, str(Path.home()) + '/.azure/cliextensions/sentinel')
-
-reload(azure)
+import yaml
 from azure.cli.core.commands.client_factory import get_mgmt_service_client
-from azure.mgmt.logic import LogicManagementClient
-from azext_sentinel.vendored_sdks import SecurityInsights
-from azext_sentinel.vendored_sdks.models import AlertRule, ActionResponse, ActionRequest, ActionResponsePaged
 from jsonschema import ValidationError
-from knack.util import CLIError
-
-from .constants import DEFAULT_DETECTION_SCHEMA, DOCUMENTATION_TEMPLATE, DEFAULT_DETECTION_TEMPLATE
 from knack.log import get_logger
 from knack.prompting import prompt, prompt_y_n
+from knack.util import CLIError
 from msrestazure.azure_exceptions import CloudError
 
-from .vendored_sdks.models import ScheduledAlertRule
+from ._validators import validate_name
+from .constants import ResourceType, RESOURCE_DEFAULTS, ResourceConfig, SENTINEL_POST_ALERT_TRIGGER_PATH, \
+    ResourceFetchMethod
+from .vendored_sdks.logic_app.mgmt.logic.logic_management_client import LogicManagementClient
+from .vendored_sdks.security_insights import SecurityInsights
+from .vendored_sdks.security_insights.models import AlertRule, ActionResponse, ActionRequest, ScheduledAlertRule
 
 logger = get_logger(__name__)
-
-SENTINEL_POST_ALERT_TRIGGER_PATH = '/triggers/When_a_response_to_an_Azure_Sentinel_alert_is_triggered/paths/invoke'
 
 
 def create_detections(
@@ -44,13 +36,14 @@ def create_detections(
         detection_schema: Union[str, None] = None,
         enable_validation: bool = False
 ) -> List[AlertRule]:
+    """Loads the detection config from the local file/dir, validates it and deploys it"""
     security_insights_client = client
     playbook_client: LogicManagementClient = get_mgmt_service_client(cmd.cli_ctx, LogicManagementClient)
 
     if enable_validation:
         validate_detections(detection_file, detections_directory, detection_schema)
 
-    detection_files = _get_detection_files(detection_file, detections_directory)
+    detection_files = _get_resource_files(detection_file, detections_directory)
     deployed_detections = []
     for file in detection_files:
         deployed_detections.append(
@@ -64,12 +57,119 @@ def validate_detections(
         detection_file: Union[str, None] = None,
         detection_schema: Union[str, None] = None
 ) -> None:
-    ## TODO: check if there are detections with the same ID
-    detection_schema_file = detection_schema if detection_schema else DEFAULT_DETECTION_SCHEMA
-    schema = yaml.safe_load(detection_schema_file.read_text())
-    detection_files = _get_detection_files(detection_file, detections_directory)
-    for file in detection_files:
-        logger.info('Validating detection %s with schema at %s', file, detection_schema_file)
+    """Validates the detections against its configured JSON schema"""
+    validate_resources(
+        resource_type=ResourceType.DETECTION,
+        resources_directory=detections_directory,
+        resource_file=detection_file,
+        resource_schema=detection_schema
+    )
+
+
+def generate_detection(
+        detections_directory: Union[str, None] = None,
+        skip_interactive: bool = False,
+        name: Union[str, None] = None,
+        create_directory: bool = True,
+        with_documentation: bool = True,
+):
+    """Creates a scaffolding for the detection based on the configured template"""
+    generate_resource(
+        resource_type=ResourceType.DETECTION,
+        resources_directory=detections_directory,
+        skip_interactive=skip_interactive,
+        name=name,
+        create_directory=create_directory,
+        with_documentation=with_documentation
+    )
+
+
+def generate_data_source(
+        data_sources_directory: Union[str, None] = None,
+        skip_interactive: bool = False,
+        name: Union[str, None] = None,
+        create_directory: bool = True,
+        with_documentation: bool = True
+):
+    """Creates a scaffolding for the data source based on the configured template"""
+    generate_resource(
+        resource_type=ResourceType.DATA_SOURCE,
+        resources_directory=data_sources_directory,
+        skip_interactive=skip_interactive,
+        name=name,
+        create_directory=create_directory,
+        with_documentation=with_documentation
+    )
+
+
+def generate_resource(
+        resource_type: ResourceType,
+        resources_directory: Union[str, None] = None,
+        skip_interactive: bool = False,
+        name: Union[str, None] = None,
+        create_directory: bool = False,
+        with_documentation: bool = False,
+) -> None:
+    """Creates a scaffolding for the given resource based on the configured template"""
+    # Populate values for the resource
+    if not skip_interactive:
+        if not name:
+            name = prompt(f"Name your {resource_type.value}(alphanumeric without spaces): ")
+            validate_name(name)
+        if not create_directory:
+            create_directory = prompt_y_n(
+                f"Would you like to create a new directory for your {resource_type.value}?")
+        if not with_documentation:
+            with_documentation = prompt_y_n(
+                f"Would you like to create a documentation file for your {resource_type.value}?")
+    resources_directory: str = resources_directory if resources_directory else os.getcwd()
+    resource_file_name: str = name + '.yaml'
+    resource_template = _resolve_config_file(resource_type, ResourceConfig.TEMPLATE)
+    resource_config: str = resource_template.read_text().format(unique_id=str(uuid.uuid4()), name=name)
+
+    # Setup resource directory
+    if create_directory:
+        directory_path: Path = Path(resources_directory) / name
+        directory_path.mkdir()
+    else:
+        directory_path: Path = Path(resources_directory)
+
+    # Write resource
+    resource_file: Path = directory_path / resource_file_name
+    resource_file.write_text(resource_config)
+    if with_documentation:
+        resource_documentation = _resolve_config_file(resource_type, ResourceConfig.DOCUMENTATION)
+        _create_documentation(resource_documentation, name, directory_path)
+
+
+def validate_data_sources(
+        data_sources_directory: Union[str, None] = None,
+        data_source_file: Union[str, None] = None,
+        data_source_schema: Union[str, None] = None
+):
+    """Validates the data source against its configured JSON schema"""
+    validate_resources(
+        resource_type=ResourceType.DATA_SOURCE,
+        resources_directory=data_sources_directory,
+        resource_file=data_source_file,
+        resource_schema=data_source_schema
+    )
+
+
+def validate_resources(
+        resource_type: ResourceType,
+        resources_directory: Union[str, None] = None,
+        resource_file: Union[str, None] = None,
+        resource_schema: Union[str, None] = None,
+) -> None:
+    """Validates the given resources against its configured JSON schema"""
+    # TODO: check if there are resources with the same ID
+
+    resource_schema_file = _resolve_config_file(resource_type, ResourceConfig.SCHEMA, resource_schema)
+    schema = yaml.safe_load(resource_schema_file.read_text())
+    resource_files = _get_resource_files(resource_file, resources_directory)
+    for file in resource_files:
+        logger.info(f"Validating {resource_type.value} {file} with schema at {resource_schema_file}")
         alert_rule = yaml.safe_load(file.read_text())
         try:
             jsonschema.validate(alert_rule, schema)
@@ -78,49 +178,52 @@ def validate_detections(
     logger.info('All validations successful!')
 
 
-def generate_detection(
-        detections_directory: Union[str, None] = None,
-        skip_interactive: bool = False,
-        name: Union[str, None] = None,
-        create_directory: bool = True,
-        with_documentation: bool = True
-) -> None:
-    # Populate values for the detection
-    if not skip_interactive:
-        if not name:
-            name = prompt("Name your detection: ")
-        if not create_directory:
-            create_directory = prompt_y_n("Would you like to create a new directory for your detection?")
-        if not with_documentation:
-            with_documentation = prompt_y_n("Would you like to create a documentation file for your detection?")
-    detections_directory: str = detections_directory if detections_directory else os.getcwd()
-    detection_file_name: str = name + '.yaml'
-    detection_config: str = DEFAULT_DETECTION_TEMPLATE.format(str(uuid.uuid4()), name, name)
-
-    # Setup detection directory
-    if create_directory:
-        directory_path: Path = Path(detections_directory) / name
-        directory_path.mkdir()
+def _resolve_config_file(
+        resource_type: ResourceType,
+        resource_config: ResourceConfig,
+        preferred_config: Union[str, None] = None
+) -> Path:
+    """
+    Returns the most local config. If `preferred_config` is provided, it returns it.
+    If not, looks for a local file. If that is not available, returns the config file bundled with the CLI
+    """
+    if preferred_config:
+        config_file = Path(preferred_config)
     else:
-        directory_path: Path = Path(detections_directory)
-
-    # Write Detection
-    detection_file: Path = directory_path / detection_file_name
-    detection_file.write_text(detection_config)
-    if with_documentation:
-        _create_documentation(DOCUMENTATION_TEMPLATE, name, directory_path)
+        local_file = _get_local_config_file(resource_type, resource_config)
+        fallback_file = RESOURCE_DEFAULTS[resource_type][resource_config][ResourceFetchMethod.FALLBACK]
+        config_file = local_file if local_file else fallback_file
+    return config_file
 
 
-def _get_detection_files(
-        detection_file: Union[str, None] = None,
-        detections_directory: Union[str, None] = None
+def _get_local_config_file(
+        resource_type: ResourceType,
+        resource_config: ResourceConfig
+) -> Union[Path, None]:
+    """Loads the local config file if available by traversing upto the HOME directory of the user"""
+    file_name = RESOURCE_DEFAULTS[resource_type][resource_config][ResourceFetchMethod.LOCAL]
+    current_path = Path.cwd()
+    while current_path not in [Path.home(), current_path.root]:
+        local_file = current_path / file_name
+        if local_file.exists():
+            return local_file
+        else:
+            current_path = current_path.parent
+            continue
+    return None
+
+
+def _get_resource_files(
+        resource_file: Union[str, None] = None,
+        resources_directory: Union[str, None] = None
 ) -> Union[Generator[Path, None, None], List[Path]]:
-    if detections_directory:
-        detection_path = Path(detections_directory)
-        detection_files = detection_path.glob('**/*.yaml')
+    """ Gets all the YAML files in the folder or just returns the original file if `resource_file` is provided """
+    if resources_directory:
+        resource_path = Path(resources_directory)
+        resource_files = resource_path.glob('**/*.yaml')
     else:
-        detection_files = [Path(detection_file)]
-    return detection_files
+        resource_files = [Path(resource_file)]
+    return resource_files
 
 
 def _create_or_update_detection(
@@ -130,8 +233,10 @@ def _create_or_update_detection(
         workspace_name: str,
         detection_file: Path
 ) -> AlertRule:
+    """Loads the detection config from the local file/dir and deploys it"""
     alert_rule = yaml.safe_load(detection_file.read_text())
     alert_playbook_name = alert_rule.pop('playbook_name', None)
+    alert_rule.pop('additional_metadata', None)
     # Fetch the existing rule to update if it already exists
     try:
         existing_rule = security_insights_client.alert_rules.get(resource_group_name,

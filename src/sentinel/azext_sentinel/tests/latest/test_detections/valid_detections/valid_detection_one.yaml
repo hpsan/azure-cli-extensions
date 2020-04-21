@@ -14,7 +14,6 @@ tactics:
 
 suppression_duration: 'P1D'
 suppression_enabled: True
-playbook_name: Playbook3
 query: |
   datatable (SomeInt:int, SomeString:string) [
     100, "Foo",

@@ -4,7 +4,7 @@
 # --------------------------------------------------------------------------------------------
 
 from azure.cli.core.commands.client_factory import get_mgmt_service_client
-from azext_sentinel.vendored_sdks import SecurityInsights
+from azext_sentinel.vendored_sdks.security_insights import SecurityInsights
 
 
 def cf_sentinel(cli_ctx, *_):

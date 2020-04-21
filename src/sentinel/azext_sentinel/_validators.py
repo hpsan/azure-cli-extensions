@@ -2,7 +2,11 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
+import re
+
 from knack.util import CLIError
+
+ALPHANUMERIC_REGEX = "^[a-zA-Z0-9-]*$" # Dashes also allowed for historic reasons
 
 
 def detection_create_validator(namespace):
@@ -10,7 +14,11 @@ def detection_create_validator(namespace):
         raise CLIError('incorrect usage: --detections-directory DIRECTORY | --detection-file FILE')
 
 
-def detection_generate_validator(namespace):
+def generate_validator(namespace):
     if bool(namespace.skip_interactive):
-        if not bool(namespace.name):
-            raise CLIError('incorrect usage: --name DETECTION_NAME')
+        validate_name(namespace.name)
+
+
+def validate_name(name: str):
+    if not (bool(name) and re.match(ALPHANUMERIC_REGEX, name)):
+        raise CLIError('incorrect usage: --name DETECTION_NAME(alphanumeric without spaces)')

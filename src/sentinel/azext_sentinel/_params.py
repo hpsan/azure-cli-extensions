@@ -19,6 +19,16 @@ def load_arguments(self, _):
     detection_schema_type = CLIArgumentType(options_list=['--detection-schema', '-s'],
                                             completer=FilesCompleter(allowednames=['json', 'yaml'], directories=False),
                                             type=file_type, help="File path of the detection schema")
+    data_sources_directory_type = CLIArgumentType(options_list=['--data-sources-directory', '-d'],
+                                                 completer=DirectoriesCompleter(), type=file_type,
+                                                 help='Directory which contains data source files')
+    data_source_file_type = CLIArgumentType(options_list=['--data-source-file', '-f'],
+                                            completer=FilesCompleter(allowednames=['json', 'yaml']),
+                                            type=file_type, help="File path of the data source")
+    data_source_schema_type = CLIArgumentType(options_list=['--data-source-schema', '-s'],
+                                              completer=FilesCompleter(allowednames=['json', 'yaml'],
+                                                                       directories=False),
+                                              type=file_type, help="File path of the data source schema")
 
     with self.argument_context('sentinel') as c:
         c.argument('workspace_name', options_list=['--workspace-name', '-n'], help='Name of the Sentinel Workspace')
@@ -40,8 +50,24 @@ def load_arguments(self, _):
         c.argument('skip_interactive', options_list=['--skip-interactive'],
                    arg_type=get_three_state_flag(), help='Enable/Disable interactive detection creation')
         # TODO: Add all detection configurations as arguments here
-        c.argument('name', options_list=['--name', '-n'])
+        c.argument('name', options_list=['--name', '-n'], help='Name of your detection(alphanumeric without spaces)')
         c.argument('create_directory', options_list=['--create-dir'],
                    arg_type=get_three_state_flag(), help='Enable/Disable creating new directory for the detection')
         c.argument('with_documentation', options_list=['--with-documentation', '--doc'],
                    arg_type=get_three_state_flag(), help='Enable/Disable detection documentation')
+
+    with self.argument_context('sentinel data_source validate') as c:
+        c.argument('data_sources_directory', data_sources_directory_type)
+        c.argument('data_source_file', data_source_file_type)
+        c.argument('data_source_schema', data_source_schema_type)
+
+    with self.argument_context('sentinel data_source generate') as c:
+        c.argument('data_sources_directory', data_sources_directory_type)
+        c.argument('skip_interactive', options_list=['--skip-interactive'],
+                   arg_type=get_three_state_flag(), help='Enable/Disable interactive data siyrce creation')
+        # TODO: Add all detection configurations as arguments here
+        c.argument('name', options_list=['--name', '-n'], help='Name of your data source(alphanumeric without spaces)')
+        c.argument('create_directory', options_list=['--create-dir'],
+                   arg_type=get_three_state_flag(), help='Enable/Disable creating new directory for the data source')
+        c.argument('with_documentation', options_list=['--with-documentation', '--doc'],
+                   arg_type=get_three_state_flag(), help='Enable/Disable data source documentation')

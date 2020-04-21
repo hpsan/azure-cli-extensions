@@ -49,10 +49,12 @@ properties:
     title: Description
     description: The description of this detection
     type: string
+    pattern: "^((?!PLACEHOLDER).)*$"
   display_name:
     title: Display Name
     description: The display name for this detection
     type: string
+    pattern: "^[a-zA-Z0-9-]*$"
   enabled:
     title: Enable Detection
     description: Determines whether this detection is enabled or disabled
@@ -89,10 +91,28 @@ properties:
     title: Playbook Name
     description: Name of the playbook that should be triggered if the detection is triggered
     type: string
+    pattern: "^((?!PLACEHOLDER).)*$"
   query:
     title: Detection Query
     description: The query that creates alerts for this detection
     type: string
+  additional_metadata:  # This should be removed in the public version
+    title: Additional Metadata
+    description: Additional metadata specific to an organization's installation of Sentinel
+    type: object
+    properties:
+      workitem_id:
+        title: Work Item ID
+        description: Azure DevOps Work Item ID this detection is linked to
+        type: integer
+      linked_data_sources:
+        title: Linked Data Sources
+        description: Data sources that are needed by this detection. Make sure data source has been defined
+        type: array
+        items:
+          type: string
+
+
 required:
   - id
   - query_frequency

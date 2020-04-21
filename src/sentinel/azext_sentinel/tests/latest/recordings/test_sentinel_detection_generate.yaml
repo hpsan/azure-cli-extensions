@@ -20,7 +20,7 @@ interactions:
       accept-language:
       - en-US
     method: DELETE
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_2kig7m4/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2019-07-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_oemkcwv/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2019-07-01
   response:
     body:
       string: ''
@@ -28,7 +28,7 @@ interactions:
       cache-control:
       - no-cache
       date:
-      - Tue, 31 Mar 2020 03:58:51 GMT
+      - Wed, 22 Apr 2020 02:01:51 GMT
       expires:
       - '-1'
       pragma:
@@ -38,7 +38,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-ratelimit-remaining-subscription-deletes:
-      - '14992'
+      - '14998'
     status:
       code: 204
       message: No Content
@@ -63,7 +63,7 @@ interactions:
       accept-language:
       - en-US
     method: DELETE
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_2kig7m4?api-version=2019-07-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_oemkcwv?api-version=2019-07-01
   response:
     body:
       string: ''
@@ -73,11 +73,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Tue, 31 Mar 2020 03:58:54 GMT
+      - Wed, 22 Apr 2020 02:01:53 GMT
       expires:
       - '-1'
       location:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1URVNUOjVGU0VOVElORUw6NUZSRzo1RjJLSUc3TTQtRUFTVFVTIiwiam9iTG9jYXRpb24iOiJlYXN0dXMifQ?api-version=2019-07-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1URVNUOjVGU0VOVElORUw6NUZSRzo1Rk9FTUtDV1YtRUFTVFVTIiwiam9iTG9jYXRpb24iOiJlYXN0dXMifQ?api-version=2019-07-01
       pragma:
       - no-cache
       strict-transport-security:
@@ -85,7 +85,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-ratelimit-remaining-subscription-deletes:
-      - '14999'
+      - '14997'
     status:
       code: 202
       message: Accepted

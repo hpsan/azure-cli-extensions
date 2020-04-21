@@ -1,0 +1,54 @@
+schema: "http://json-schema.org/draft-07/schema#"
+title: Azure Sentinel Data Source
+description: Schema to codify Azure Sentinel data sources. Based on aka.ms/sentinelrestapi
+type: object
+properties:
+  name:
+    title: Data Source Name
+    description: Unique name to identify this data source
+    type: string
+    pattern: "^[a-zA-Z0-9-]*$"
+  description:
+    title: Description
+    description: Short description of the data source
+    type: string
+    pattern: "^((?!PLACEHOLDER).)*$"
+  parser:
+    title: Parser
+    description: Configuration for the parser function
+    type: object
+    properties:
+      function_id:
+        title: Parser Function ID
+        description: Unique ID specific to a parser function
+        type: string
+        examples:
+          - 5b8d86f5-26a8-49b8-ba37-b35286e485ef
+      display_name:
+        title: Parser Function Name
+        description: Name of the function saved in log analytics
+        type: string
+        pattern: "^((?!PLACEHOLDER).)*$"
+        examples:
+          - AWSCloudTrail_Normalized
+      query:
+        title: Parser Function Query
+        description: The KQL query that parses the raw source and outputs normalized data
+        type: string
+    required:
+      - function_id
+      - display_name
+      - query
+  additional_metadata:
+    title: Additional Metadata
+    description: Additional metadata specific to an organization's installation of Sentinel
+    type: object
+    properties:
+      workitem_id:
+        title: Work Item ID
+        description: Azure DevOps Work Item ID this data source is linked to
+        type: integer
+required:
+  - name
+  - description
+  - parser

@@ -1,59 +1,69 @@
+from enum import Enum
 from pathlib import Path
 
-DEFAULT_DETECTION_SCHEMA: Path = Path(__file__).parent / 'default_detection_schema.yaml'
-DOCUMENTATION_TEMPLATE: Path = Path(__file__).parent / 'detection_documentation_template.md'
+DEFAULTS_DIR: Path = Path(__file__).parent
 
-# Default value for generating new detections
-DEFAULT_DETECTION_TEMPLATE: str = """
-id: {}
+DEFAULT_DETECTION_SCHEMA: Path = DEFAULTS_DIR / 'default_detection_schema.yaml'
+LOCAL_DETECTION_SCHEMA: str = '.detection_schema.json'
+DEFAULT_DETECTION_TEMPLATE: Path = DEFAULTS_DIR / 'default_detection_template.yaml'
+LOCAL_DETECTION_TEMPLATE: str = '.detection_template.yaml'
+DEFAULT_DETECTION_DOCUMENTATION: Path = DEFAULTS_DIR / 'default_detection_documentation.md'
+LOCAL_DETECTION_DOCUMENTATION: str = '.detection_documentation.md'
 
-# The period (in ISO 8601 duration format) that this detection looks at
-query_frequency: PT5M
+DEFAULT_DATA_SOURCE_SCHEMA: Path = DEFAULTS_DIR / 'default_data_source_schema.yaml'
+LOCAL_DATA_SOURCE_SCHEMA: str = '.data_source_schema.json'
+DEFAULT_DATA_SOURCE_TEMPLATE: Path = DEFAULTS_DIR / 'default_data_source_template.yaml'
+LOCAL_DATA_SOURCE_TEMPLATE: str = '.data_source_template.yaml'
+DEFAULT_DATA_SOURCE_DOCUMENTATION: Path = DEFAULTS_DIR / 'default_data_source_documentation.md'
+LOCAL_DATA_SOURCE_DOCUMENTATION: str = '.data_source_documentation.md'
 
-# Add query period in ISO 8601 duration format
-query_period: P1D
 
-# The severity for alerts created by this detection
-# Options: Informational, Low, Medium, High
-severity: Low
+SENTINEL_POST_ALERT_TRIGGER_PATH = '/triggers/When_a_response_to_an_Azure_Sentinel_alert_is_triggered/paths/invoke'
 
-# The operation against the threshold that triggers detection
-# Options: GreaterThan, LessThan, Equal, NotEqual
-trigger_operator: 'GreaterThan'
 
-# The threshold triggers this detection
-trigger_threshold: 0
+class ResourceType(Enum):
+    DETECTION = "detection"
+    DATA_SOURCE = "data source"
 
-# The description of this detection
-description: |
-  '{}'
 
-# The display name for this detection
-display_name: '{}'
+class ResourceConfig(Enum):
+    SCHEMA = "schema"
+    TEMPLATE = "template"
+    DOCUMENTATION = "documentation"
 
-# Determines whether this detection is enabled or disabled
-enabled: True
 
-# The tactics for this detection
-# Options: InitialAccess, Execution, Persistence, PrivilegeEscalation, DefenseEvasion, CredentialAccess, Discovery,
-#          LateralMovement, Collection, Exfiltration, CommandAndControl, Impact
-tactics:
-  - <Add tactics here>
+class ResourceFetchMethod(Enum):
+    LOCAL = "local"
+    FALLBACK = "fallback"
 
-# The suppression (in ISO 8601 duration format) to wait since last time this detection been triggered
-suppression_duration: 'P10D'
 
-# Determines whether the suppression for this detection is enabled or disabled
-suppression_enabled: True
-
-# Playbook to be run automatically when your detection generates an alert.
-# example - playbook_name: 'PostAlertActions-SentinelTrigger'
-playbook_name: <Add playbook name here>
-
-# The KQL query that creates alerts for this detection
-# Read aka.ms/kql to learn how to write KQL queries
-# Also see tips and tricks here https://github.com/Azure/Azure-Sentinel/wiki/Gotcha%27s-when-building-queries
-query: |
-  SecurityEvent
-  | limit 10
-"""
+RESOURCE_DEFAULTS = {
+    ResourceType.DETECTION: {
+        ResourceConfig.SCHEMA: {
+            ResourceFetchMethod.LOCAL: LOCAL_DETECTION_SCHEMA,
+            ResourceFetchMethod.FALLBACK: DEFAULT_DETECTION_SCHEMA
+        },
+        ResourceConfig.TEMPLATE: {
+            ResourceFetchMethod.LOCAL: LOCAL_DETECTION_TEMPLATE,
+            ResourceFetchMethod.FALLBACK: DEFAULT_DETECTION_TEMPLATE
+        },
+        ResourceConfig.DOCUMENTATION: {
+            ResourceFetchMethod.LOCAL: LOCAL_DETECTION_DOCUMENTATION,
+            ResourceFetchMethod.FALLBACK: DEFAULT_DETECTION_DOCUMENTATION
+        }
+    },
+    ResourceType.DATA_SOURCE: {
+        ResourceConfig.SCHEMA: {
+            ResourceFetchMethod.LOCAL: LOCAL_DATA_SOURCE_SCHEMA,
+            ResourceFetchMethod.FALLBACK: DEFAULT_DATA_SOURCE_SCHEMA
+        },
+        ResourceConfig.TEMPLATE: {
+            ResourceFetchMethod.LOCAL: LOCAL_DATA_SOURCE_TEMPLATE,
+            ResourceFetchMethod.FALLBACK: DEFAULT_DATA_SOURCE_TEMPLATE
+        },
+        ResourceConfig.DOCUMENTATION: {
+            ResourceFetchMethod.LOCAL: LOCAL_DATA_SOURCE_DOCUMENTATION,
+            ResourceFetchMethod.FALLBACK: DEFAULT_DATA_SOURCE_DOCUMENTATION
+        }
+    }
+}
