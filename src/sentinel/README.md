@@ -69,9 +69,14 @@ NewDetection/
 (azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $
 ```
 ### Step 2: Complete your detection configuration 
-Open NewDetection.yaml. You will see that there is a basic template populated for you with some good defaults and 
+Open NewDetection.yaml. 
+
+You will see that there is a basic template populated for you with some good defaults and 
 some placeholder tags for properties that you need to fill
-Note: Recommend using VSCode to fill out these properties and setting up JSON schema validation for your files.
+
+_Note:_ 
+Recommend using VSCode to fill out these properties and setting up JSON schema validation for your files.
+
 You will find that setup in the [toy repo](https://github.com/hpsan/sample-sentinel-setup) For details, please refer
 to https://joshuaavalon.io/intellisense-json-yaml-vs-code
 
@@ -103,6 +108,7 @@ For more details on how to setup a deployment pipeline using Azure pipelines, re
 
 ## Development
 Read up on https://github.com/Azure/azure-cli/blob/dev/doc/authoring_command_modules/authoring_commands.md to understand how to author new commands in the extension
+
 Read up on https://github.com/Azure/azure-cli/blob/master/doc/extensions/authoring.md to understand how to perform basic actions with the CLI like lint checks, tests etc.,
 ### Testing
 You can test using the azure CLI dev tools extension. Note that it uses VCR.py to perform integration tests. So you will need to manually change the references to the
@@ -151,5 +157,5 @@ to get those libraries
 - Add support to deploying other Sentinel resources such as playbooks, data sources, etc., via the CLI
 - Add support to new features added to detections such as alert grouping. This is currently blocked on this being available via the Azure REST API  
 ### References
-- Prior art, using Powershell https://github.com/wortell/AZSentinel
-- 
+- Prior art, Powershell library https://github.com/wortell/AZSentinel
+- Prior art, sample repo setup using the powershell library https://github.com/javiersoriano/sentinelascode
