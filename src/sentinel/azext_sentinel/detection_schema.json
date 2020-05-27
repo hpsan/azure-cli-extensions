@@ -1,0 +1,160 @@
+{
+	"schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Azure Sentinel Detection",
+	"description": "Schema to codify Azure Sentinel detections. Based on aka.ms/sentinelrestapi",
+	"type": "object",
+	"properties": {
+		"id": {
+			"title": "Detection ID",
+			"description": "Unique ID specific to a detection",
+			"type": "string",
+			"examples": [
+				"5b8d86f5-26a8-49b8-ba37-b35286e485ef"
+			]
+		},
+		"query_frequency": {
+			"title": "Query Frequency",
+			"description": "The frequency (in ISO 8601 duration format) for this detection to run",
+			"type": "string",
+			"examples": [
+				"P1D",
+				"P14H"
+			]
+		},
+		"query_period": {
+			"title": "Query Period",
+			"description": "The period (in ISO 8601 duration format) that this detection looks at",
+			"type": "string",
+			"examples": [
+				"P1D",
+				"P14H"
+			]
+		},
+		"severity": {
+			"title": "Severity",
+			"description": "The severity for alerts created by this detection",
+			"type": "string",
+			"enum": [
+				"Informational",
+				"Low",
+				"Medium",
+				"High"
+			]
+		},
+		"trigger_operator": {
+			"title": "Trigger Operator",
+			"description": "The operation against the threshold that triggers detection",
+			"type": "string",
+			"enum": [
+				"GreaterThan",
+				"LessThan",
+				"Equal",
+				"NotEqual"
+			]
+		},
+		"trigger_threshold": {
+			"title": "Trigger Threshold",
+			"description": "The threshold triggers this detection",
+			"type": "integer"
+		},
+		"description": {
+			"title": "Description",
+			"description": "The description of this detection",
+			"type": "string",
+			"pattern": "^((?!PLACEHOLDER).)*$"
+		},
+		"display_name": {
+			"title": "Display Name",
+			"description": "The display name for this detection",
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9-]*$"
+		},
+		"enabled": {
+			"title": "Enable Detection",
+			"description": "Determines whether this detection is enabled or disabled",
+			"type": "boolean"
+		},
+		"tactics": {
+			"title": "Tactics",
+			"description": "The tactices for this detection",
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"InitialAccess",
+					"Execution",
+					"Persistence",
+					"PrivilegeEscalation",
+					"DefenseEvasion",
+					"CredentialAccess",
+					"Discovery",
+					"LateralMovement",
+					"Collection",
+					"Exfiltration",
+					"CommandAndControl",
+					"Impact"
+				]
+			}
+		},
+		"suppression_duration": {
+			"title": "Suppression Duration",
+			"description": "The suppression (in ISO 8601 duration format) to wait since last time this detection been triggered",
+			"type": "string"
+		},
+		"suppression_enabled": {
+			"title": "Suppression Enabled",
+			"description": "Determines whether the suppression for this detection is enabled or disabled",
+			"type": "boolean"
+		},
+		"playbook_name": {
+			"title": "Playbook Name",
+			"description": "Name of the playbook that should be triggered if the detection is triggered",
+			"type": "string",
+			"pattern": "^((?!PLACEHOLDER).)*$"
+		},
+		"query": {
+			"title": "Detection Query",
+			"description": "The query that creates alerts for this detection",
+			"type": "string"
+		},
+		"additional_metadata": {
+			"title": "Additional Metadata",
+			"description": "Additional metadata specific to an organization's installation of Sentinel",
+			"type": "object",
+			"properties": {
+				"workitem_id": {
+					"title": "Work Item ID",
+					"description": "Azure DevOps Work Item ID this detection is linked to",
+					"type": "integer"
+				},
+				"linked_data_sources": {
+					"title": "Linked Data Sources",
+					"description": "Data sources that are needed by this detection. Make sure data source has been defined",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"required": [
+		"id",
+		"query_frequency",
+		"query_period",
+		"severity",
+		"trigger_operator",
+		"description",
+		"display_name",
+		"enabled",
+		"tactics",
+		"suppression_duration",
+		"suppression_enabled",
+		"query"
+	],
+	"dependencies": {
+		"suppression_enabled": [
+			"suppression_duration"
+		]
+	}
+}

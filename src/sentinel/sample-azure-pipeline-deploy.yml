@@ -1,0 +1,32 @@
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - Detections/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+# Add other pre-processing steps here if you need to
+  - task: AzureCLI@2
+    displayName: Validation
+    inputs:
+      azureSubscription: 'azure-sentinel-devops-service-conn' # You'll need to create your own service connection between your Azure DevOps instance and Azure Sentinel based on instructions at https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: | # Make sure that you copy the azure extension whl file into your repo under a vendor/ folder. This will be available via the global extension library in the future
+        az extension add --source vendor/sentinel-0.1.1-py2.py3-none-any.whl --yes
+        az sentinel detection validate -d Detections/ --verbose
+
+  - task: AzureCLI@2
+    displayName: Azure CLI
+    inputs:
+      azureSubscription: 'azure-sentinel-devops-service-conn'
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: | # Replace the subscription ID, resource group and workspace name.
+        az sentinel detection create --subscription sample-subscription-id --resource-group sample-sentinel-rg --workspace-name sample-workspace --detections-directory Detections/
+  # If you need to deploy to more than one subscription/resource group, add another service connection and another task that deploys to that subscription
