@@ -13,6 +13,9 @@ def detection_create_validator(namespace):
     if bool(namespace.detections_directory) == bool(namespace.detection_file):
         raise CLIError('incorrect usage: --detections-directory DIRECTORY | --detection-file FILE')
 
+def data_source_create_validator(namespace):
+    if bool(namespace.data_sources_directory) == bool(namespace.data_source_file):
+        raise CLIError('incorrect usage: --data-sources-directory DIRECTORY | --data-source-file FILE')
 
 def generate_validator(namespace):
     if bool(namespace.skip_interactive):
@@ -21,4 +24,4 @@ def generate_validator(namespace):
 
 def validate_name(name: str):
     if not (bool(name) and re.match(ALPHANUMERIC_REGEX, name)):
-        raise CLIError('incorrect usage: --name DETECTION_NAME(alphanumeric without spaces)')
+        raise CLIError('incorrect usage: --name NAME(alphanumeric without spaces)')

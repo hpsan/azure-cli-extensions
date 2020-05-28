@@ -56,6 +56,13 @@ def load_arguments(self, _):
         c.argument('with_documentation', options_list=['--with-documentation', '--doc'],
                    arg_type=get_three_state_flag(), help='Enable/Disable detection documentation')
 
+    with self.argument_context('sentinel data_source create') as c:
+        c.argument('data_sources_directory', data_sources_directory_type)
+        c.argument('data_source_file', data_source_file_type)
+        c.argument('enable_validation', options_list=['--enable-validation'],
+                   arg_type=get_three_state_flag(), help='Enable/Disable data source validation before deploying it')
+        c.argument('data_source_schema', data_source_schema_type)
+
     with self.argument_context('sentinel data_source validate') as c:
         c.argument('data_sources_directory', data_sources_directory_type)
         c.argument('data_source_file', data_source_file_type)

@@ -5,17 +5,19 @@
 import os
 import uuid
 from pathlib import Path
-from typing import List, Union, Generator
+from typing import List, Union, Generator, Optional
 
 import jsonschema
 import yaml
-from azure.cli.core.commands.client_factory import get_mgmt_service_client
+from azure.cli.core.commands.client_factory import get_mgmt_service_client, get_subscription_id
 from jsonschema import ValidationError
 from knack.log import get_logger
 from knack.prompting import prompt, prompt_y_n
 from knack.util import CLIError
 from msrestazure.azure_exceptions import CloudError
 
+from .vendored_sdks.loganalytics.mgmt.loganalytics import LogAnalyticsManagementClient
+from .vendored_sdks.loganalytics.mgmt.loganalytics.models import SavedSearch
 from ._validators import validate_name
 from .constants import ResourceType, RESOURCE_DEFAULTS, ResourceConfig, SENTINEL_POST_ALERT_TRIGGER_PATH, \
     ResourceFetchMethod
@@ -24,7 +26,7 @@ from .vendored_sdks.security_insights import SecurityInsights
 from .vendored_sdks.security_insights.models import AlertRule, ActionResponse, ActionRequest, ScheduledAlertRule
 
 logger = get_logger(__name__)
-
+PARSER_CATEGORY_NAME = "parser"
 
 def create_detections(
         cmd,
@@ -41,7 +43,7 @@ def create_detections(
     playbook_client: LogicManagementClient = get_mgmt_service_client(cmd.cli_ctx, LogicManagementClient)
 
     if enable_validation:
-        validate_detections(detection_file, detections_directory, detection_schema)
+        validate_detections(detections_directory, detection_file, detection_schema)
 
     detection_files = _get_resource_files(detection_file, detections_directory)
     deployed_detections = []
@@ -82,6 +84,38 @@ def generate_detection(
         create_directory=create_directory,
         with_documentation=with_documentation
     )
+
+
+def create_data_sources(
+        cmd,
+        client: SecurityInsights,
+        resource_group_name: str,
+        workspace_name: str,
+        data_sources_directory: Union[str, None] = None,
+        data_source_file: Union[str, None] = None,
+        data_source_schema: Union[str, None] = None,
+        enable_validation: bool = False
+) -> List[SavedSearch]:
+    """
+    Loads the data source config from the local file/dir, validates it and deploys it
+    Note that at this point, it only deploys
+    the parser associated with the data source and not other related entities such as data source connectors
+    """
+    security_insights_client = client
+    loganalytics_client: LogAnalyticsManagementClient = get_mgmt_service_client(cmd.cli_ctx, LogAnalyticsManagementClient)
+    subscription_id = get_subscription_id(cmd.cli_ctx)
+
+    if enable_validation:
+        validate_data_sources(data_sources_directory, data_source_file, data_source_schema)
+
+    data_source_files = _get_resource_files(data_source_file, data_sources_directory)
+    deployed_data_sources = []
+    for file in data_source_files:
+        deployed_data_source = _create_or_update_data_source(
+            loganalytics_client, subscription_id, resource_group_name, workspace_name, file)
+        if deployed_data_source:
+            deployed_data_sources.append(deployed_data_source)
+    return deployed_data_sources
 
 
 def generate_data_source(
@@ -329,6 +363,48 @@ def _unlink_all_playbooks(
             linked_playbook.name
         )
     return
+
+
+def _create_or_update_data_source(
+        loganalytics_client: LogAnalyticsManagementClient,
+        subscription_id: str,
+        resource_group_name: str,
+        workspace_name: str,
+        data_source_file: Path
+) -> Optional[SavedSearch]:
+    """
+    Loads the data soure config from the local file/dir and deploys it. Note that at this point, it only deploys
+    the parser associated with the data source and not other related entities such as data source connectors
+    """
+    data_source = yaml.safe_load(data_source_file.read_text())
+    parser = data_source.get('parser')
+    if not parser:
+        return None
+    # Fetch the existing parser to update if it already exists
+    try:
+        existing_parser: SavedSearch = loganalytics_client.saved_searches.get(resource_group_name,
+                                                                              workspace_name,
+                                                                              parser['function_id'])
+        parser['etag'] = existing_parser.additional_properties['etag']
+    except CloudError:
+        pass
+    try:
+        saved_search_id = f"subscriptions/{subscription_id}/resourceGroups/{resource_group_name}/providers/Microsoft.OperationalInsights/workspaces/{workspace_name}/savedSearches/{parser['function_id']}"
+        saved_search = SavedSearch(
+            id=saved_search_id,
+            display_name=parser['display_name'],
+            function_alias=parser['display_name'],
+            query=parser['query'],
+            e_tag=parser.get('etag'),
+            category=PARSER_CATEGORY_NAME
+        )
+        created_saved_search: SavedSearch = loganalytics_client.saved_searches.create_or_update(
+            resource_group_name, workspace_name, parser['function_id'], saved_search
+        )
+    except CloudError as azCloudError:
+        logger.error('Unable to create/update the parser %s due to %s', data_source_file, str(azCloudError))
+        raise azCloudError
+    return created_saved_search
 
 
 def _create_documentation(
