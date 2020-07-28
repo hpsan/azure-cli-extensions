@@ -6,16 +6,18 @@ import re
 
 from knack.util import CLIError
 
-ALPHANUMERIC_REGEX = "^[a-zA-Z0-9-]*$" # Dashes also allowed for historic reasons
+ALPHANUMERIC_REGEX = "^[a-zA-Z0-9-]*$"  # Dashes also allowed for historic reasons
 
 
 def detection_create_validator(namespace):
     if bool(namespace.detections_directory) == bool(namespace.detection_file):
         raise CLIError('incorrect usage: --detections-directory DIRECTORY | --detection-file FILE')
 
+
 def data_source_create_validator(namespace):
     if bool(namespace.data_sources_directory) == bool(namespace.data_source_file):
         raise CLIError('incorrect usage: --data-sources-directory DIRECTORY | --data-source-file FILE')
+
 
 def generate_validator(namespace):
     if bool(namespace.skip_interactive):

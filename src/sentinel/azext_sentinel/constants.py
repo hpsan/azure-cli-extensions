@@ -17,8 +17,20 @@ LOCAL_DATA_SOURCE_TEMPLATE: str = '.data_source_template.yaml'
 DEFAULT_DATA_SOURCE_DOCUMENTATION: Path = DEFAULTS_DIR / 'default_data_source_documentation.md'
 LOCAL_DATA_SOURCE_DOCUMENTATION: str = '.data_source_documentation.md'
 
+FUNCTION_ID_KEY = "function_id"
+DISPLAY_NAME_KEY = "display_name"
+QUERY_KEY = "query"
+ETAG_KEY = "etag"
+
 
 SENTINEL_POST_ALERT_TRIGGER_PATH = '/triggers/When_a_response_to_an_Azure_Sentinel_alert_is_triggered/paths/invoke'
+
+
+class OperationType(Enum):
+    ACTION = "action"
+    ALERT_RULE = "alert_rule"
+    WORKFLOW = "workflow"
+    SAVED_SEARCH = "saved_search"
 
 
 class ResourceType(Enum):

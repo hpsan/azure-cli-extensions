@@ -10,10 +10,11 @@ import yaml
 from azure.cli.testsdk import ScenarioTest, create_random_name
 from knack.util import CLIError
 
+from azext_sentinel.constants import DISPLAY_NAME_KEY
+
 ID_KEY = "id"
 NAME_KEY = "name"
 VALUE_KEY = "value"
-DISPLAY_NAME_KEY = "display_name"
 
 TEST_RESOURCE_GROUP_PREFIX = "test_sentinel_rg_"
 DEFAULT_RESOURCE_PROVIDER = "Microsoft.OperationalInsights"
@@ -148,14 +149,10 @@ class SentinelScenarioTest(ScenarioTest):
                 )
             )
             detection_file = (
-                Path(generated_detections_folder)
-                / detection_name
-                / (detection_name + ".yaml")
+                Path(generated_detections_folder) / detection_name / (detection_name + ".yaml")
             )
             detection_documentation = (
-                Path(generated_detections_folder)
-                / detection_name
-                / (detection_name + ".md")
+                Path(generated_detections_folder) / detection_name / (detection_name + ".md")
             )
             generated_detection = yaml.safe_load(detection_file.read_text())
             self.assertEquals(generated_detection[DISPLAY_NAME_KEY], detection_name)
