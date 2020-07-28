@@ -352,7 +352,6 @@ def _get_resource_files(
         resource_files = [Path(resource_file)]
     return resource_files
 
-
 def _create_or_update_detection(
     multi_tenant_client: MultiTenantSecurityClient,
     detection_file: Path,
