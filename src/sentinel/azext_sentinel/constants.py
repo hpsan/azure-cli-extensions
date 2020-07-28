@@ -32,6 +32,13 @@ class OperationType(Enum):
     SAVED_SEARCH = "saved_search"
 
 
+class OperationType(Enum):
+    ACTION = "action"
+    ALERT_RULE = "alert_rule"
+    WORKFLOW = "workflow"
+    SAVED_SEARCH = "saved_search"
+
+
 class ResourceType(Enum):
     DETECTION = "detection"
     DATA_SOURCE = "data source"
