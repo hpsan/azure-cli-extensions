@@ -9,7 +9,7 @@ import yaml
 
 
 from pathlib import Path
-from typing import List, Union, Generator, Optional
+from typing import List, Union, Generator, Optional, Dict
 
 from azext_sentinel.custom_models import ParserParams, AlertParams, PlaybookInfo
 from azure.cli.core.commands.client_factory import (
@@ -50,6 +50,13 @@ from .vendored_sdks.security_insights.models import (
 
 logger = get_logger(__name__)
 
+PLAYBOOK_NAME_KEY = "playbook_name"
+ADDITIONAL_METADATA_KEY = "additional_metadata"
+ID_KEY = "id"
+FUNCTION_ID_KEY = "function_id"
+DISPLAY_NAME_KEY = "display_name"
+QUERY_KEY = "query"
+ETAG_KEY = "etag"
 
 def create_detections(
     cmd,
@@ -344,6 +351,7 @@ def _get_resource_files(
     else:
         resource_files = [Path(resource_file)]
     return resource_files
+
 
 def _create_or_update_detection(
     multi_tenant_client: MultiTenantSecurityClient,
