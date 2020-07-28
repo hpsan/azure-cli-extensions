@@ -192,7 +192,6 @@ class SecurityClient(BaseClient):
                 resource_group_name=self.resource_group_name,
                 operational_insights_resource_provider=self.resource_provider,
                 workspace_name=self.workspace_name,
-                rule_id=kwargs.get(RULE_ID_IDENTIFIER),
                 action_id=operation_id,
                 action=operation,
                 **kwargs,
@@ -219,7 +218,6 @@ class SecurityClient(BaseClient):
                 operational_insights_resource_provider=self.resource_provider,
                 workspace_name=self.workspace_name,
                 action_id=operation_id,
-                rule_id=kwargs.get(RULE_ID_IDENTIFIER),
                 **kwargs,
             )
         else:
