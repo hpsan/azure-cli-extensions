@@ -9,7 +9,7 @@ import yaml
 
 
 from pathlib import Path
-from typing import List, Union, Generator, Optional
+from typing import List, Union, Generator, Optional, Dict
 
 from azext_sentinel.custom_models import ParserParams, AlertParams, PlaybookInfo
 from azure.cli.core.commands.client_factory import (
@@ -351,6 +351,7 @@ def _get_resource_files(
     else:
         resource_files = [Path(resource_file)]
     return resource_files
+
 
 def _create_or_update_detection(
     multi_tenant_client: MultiTenantSecurityClient,
