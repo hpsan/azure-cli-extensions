@@ -42,6 +42,33 @@ suppression_enabled: True
 # example - playbook_name: 'PostAlertActions-SentinelTrigger'
 playbook_name: <PLACEHOLDER>
 
+# Incident configuration settings when this alert rule is triggered
+incident_configuration:
+
+  # Create incidents from alerts triggered by this analytic rule
+  create_incident: True
+
+  # Grouping configuration settings associated with this analytic rule
+  grouping_configuration:
+
+    # Group related alerts, triggered by this analytics rule, into incidents
+    enabled: False
+
+    # Limit the group to alerts created within the selected time frame (in ISO 8601 duration format)
+    lookback_duration: <PLACEHOLDER>
+
+    # Re-open closed matching incident (Can be enabled only if grouping configuration is enabled)
+    reopen_closed_incident: False
+
+    # Group alerts triggered by this analytics rule into a single incident by this matching method
+    # Options: All (recommended), Custom, None
+    entities_matching_method: <PLACEHOLDER>
+
+    # If entities matching method is Custom, grouping alerts into a single incident if the selected entities match:
+    # Options: Account, Host, Ip, Url
+    group_by_entities:
+      - <PLACEHOLDER>
+
 # The KQL query that creates alerts for this detection
 # Read aka.ms/kql to learn how to write KQL queries
 # Also see tips and tricks here https://github.com/Azure/Azure-Sentinel/wiki/Gotcha%27s-when-building-queries

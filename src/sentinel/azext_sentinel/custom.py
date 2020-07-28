@@ -4,6 +4,7 @@
 # --------------------------------------------------------------------------------------------
 import os
 import uuid
+
 from pathlib import Path
 from typing import List, Union, Generator, Optional
 
@@ -14,7 +15,6 @@ from jsonschema import ValidationError
 from knack.log import get_logger
 from knack.prompting import prompt, prompt_y_n
 from knack.util import CLIError
-from msrestazure.azure_exceptions import CloudError
 
 from .vendored_sdks.loganalytics.mgmt.loganalytics import LogAnalyticsManagementClient
 from .vendored_sdks.loganalytics.mgmt.loganalytics.models import SavedSearch
@@ -26,17 +26,20 @@ from .vendored_sdks.security_insights import SecurityInsights
 from .vendored_sdks.security_insights.models import AlertRule, ActionResponse, ActionRequest, ScheduledAlertRule
 
 logger = get_logger(__name__)
+DEFAULT_RESOURCE_PROVIDER = "Microsoft.OperationalInsights"
 PARSER_CATEGORY_NAME = "parser"
+SAVED_SEARCH_ID_TEMPLATE = "subscriptions/{}/resourceGroups/{}/providers/Microsoft.OperationalInsights/workspaces/{}/savedSearches/{}"
+
 
 def create_detections(
         cmd,
         client: SecurityInsights,
         resource_group_name: str,
         workspace_name: str,
-        detections_directory: Union[str, None] = None,
-        detection_file: Union[str, None] = None,
-        detection_schema: Union[str, None] = None,
-        enable_validation: bool = False
+        detections_directory: Optional[str] = None,
+        detection_file: Optional[str] = None,
+        detection_schema: Optional[str] = None,
+        enable_validation: Optional[bool] = False
 ) -> List[AlertRule]:
     """Loads the detection config from the local file/dir, validates it and deploys it"""
     security_insights_client = client
@@ -55,9 +58,9 @@ def create_detections(
 
 
 def validate_detections(
-        detections_directory: Union[str, None] = None,
-        detection_file: Union[str, None] = None,
-        detection_schema: Union[str, None] = None
+        detections_directory: Optional[str] = None,
+        detection_file: Optional[str] = None,
+        detection_schema: Optional[str] = None
 ) -> None:
     """Validates the detections against its configured JSON schema"""
     validate_resources(
@@ -69,11 +72,11 @@ def validate_detections(
 
 
 def generate_detection(
-        detections_directory: Union[str, None] = None,
-        skip_interactive: bool = False,
-        name: Union[str, None] = None,
-        create_directory: bool = True,
-        with_documentation: bool = True,
+        detections_directory: Optional[str] = None,
+        skip_interactive: Optional[bool] = False,
+        name: Optional[str] = None,
+        create_directory: Optional[bool] = True,
+        with_documentation: Optional[bool] = True,
 ):
     """Creates a scaffolding for the detection based on the configured template"""
     generate_resource(
@@ -91,10 +94,10 @@ def create_data_sources(
         client: SecurityInsights,
         resource_group_name: str,
         workspace_name: str,
-        data_sources_directory: Union[str, None] = None,
-        data_source_file: Union[str, None] = None,
-        data_source_schema: Union[str, None] = None,
-        enable_validation: bool = False
+        data_sources_directory: Optional[str] = None,
+        data_source_file: Optional[str] = None,
+        data_source_schema: Optional[str] = None,
+        enable_validation: Optional[bool] = False
 ) -> List[SavedSearch]:
     """
     Loads the data source config from the local file/dir, validates it and deploys it
@@ -119,11 +122,11 @@ def create_data_sources(
 
 
 def generate_data_source(
-        data_sources_directory: Union[str, None] = None,
-        skip_interactive: bool = False,
-        name: Union[str, None] = None,
-        create_directory: bool = True,
-        with_documentation: bool = True
+        data_sources_directory: Optional[str] = None,
+        skip_interactive: Optional[bool] = False,
+        name: Optional[str] = None,
+        create_directory: Optional[bool] = True,
+        with_documentation: Optional[bool] = True
 ):
     """Creates a scaffolding for the data source based on the configured template"""
     generate_resource(
@@ -138,11 +141,11 @@ def generate_data_source(
 
 def generate_resource(
         resource_type: ResourceType,
-        resources_directory: Union[str, None] = None,
-        skip_interactive: bool = False,
-        name: Union[str, None] = None,
-        create_directory: bool = False,
-        with_documentation: bool = False,
+        resources_directory: Optional[str] = None,
+        skip_interactive: Optional[bool] = False,
+        name: Optional[str] = None,
+        create_directory: Optional[bool] = False,
+        with_documentation: Optional[bool] = False,
 ) -> None:
     """Creates a scaffolding for the given resource based on the configured template"""
     # Populate values for the resource
@@ -177,9 +180,9 @@ def generate_resource(
 
 
 def validate_data_sources(
-        data_sources_directory: Union[str, None] = None,
-        data_source_file: Union[str, None] = None,
-        data_source_schema: Union[str, None] = None
+        data_sources_directory: Optional[str] = None,
+        data_source_file: Optional[str] = None,
+        data_source_schema: Optional[str] = None
 ):
     """Validates the data source against its configured JSON schema"""
     validate_resources(
@@ -192,9 +195,9 @@ def validate_data_sources(
 
 def validate_resources(
         resource_type: ResourceType,
-        resources_directory: Union[str, None] = None,
-        resource_file: Union[str, None] = None,
-        resource_schema: Union[str, None] = None,
+        resources_directory: Optional[str] = None,
+        resource_file: Optional[str] = None,
+        resource_schema: Optional[str] = None,
 ) -> None:
     """Validates the given resources against its configured JSON schema"""
     # TODO: check if there are resources with the same ID
@@ -215,7 +218,7 @@ def validate_resources(
 def _resolve_config_file(
         resource_type: ResourceType,
         resource_config: ResourceConfig,
-        preferred_config: Union[str, None] = None
+        preferred_config: Optional[str] = None
 ) -> Path:
     """
     Returns the most local config. If `preferred_config` is provided, it returns it.
@@ -248,8 +251,8 @@ def _get_local_config_file(
 
 
 def _get_resource_files(
-        resource_file: Union[str, None] = None,
-        resources_directory: Union[str, None] = None
+        resource_file: Optional[str] = None,
+        resources_directory: Optional[str] = None
 ) -> Union[Generator[Path, None, None], List[Path]]:
     """ Gets all the YAML files in the folder or just returns the original file if `resource_file` is provided """
     if resources_directory:
@@ -258,7 +261,6 @@ def _get_resource_files(
     else:
         resource_files = [Path(resource_file)]
     return resource_files
-
 
 def _create_or_update_detection(
         security_insights_client: SecurityInsights,
@@ -271,23 +273,26 @@ def _create_or_update_detection(
     alert_rule = yaml.safe_load(detection_file.read_text())
     alert_playbook_name = alert_rule.pop('playbook_name', None)
     alert_rule.pop('additional_metadata', None)
+    # incident_configuration = alert_rule.pop('incident_configuration', None)
     # Fetch the existing rule to update if it already exists
     try:
         existing_rule = security_insights_client.alert_rules.get(resource_group_name,
+                                                                 DEFAULT_RESOURCE_PROVIDER,
                                                                  workspace_name,
                                                                  alert_rule['id'])
         alert_rule['etag'] = existing_rule.etag
-    except CloudError:
+    except Exception:
         pass
     # Create the rule
     try:
         alert = ScheduledAlertRule(**alert_rule)
         created_alert: AlertRule = security_insights_client.alert_rules.create_or_update(
             resource_group_name,
+            DEFAULT_RESOURCE_PROVIDER,
             workspace_name,
             alert_rule['id'],
             alert)
-    except CloudError as azCloudError:
+    except Exception as azCloudError:
         logger.error('Unable to create/update the detection %s due to %s', detection_file, str(azCloudError))
         raise azCloudError
     # Link the playbook if it is configured
@@ -321,9 +326,10 @@ def _link_playbook(
 ) -> ActionResponse:
     previously_linked_playbooks: List[ActionResponse] = security_insights_client.actions.list_by_alert_rule(
         resource_group_name,
+        DEFAULT_RESOURCE_PROVIDER,
         workspace_name,
         rule_id
-    ).advance_page()
+    ).value
     if len(previously_linked_playbooks) == 1 and previously_linked_playbooks[0].name == playbook_name:
         linked_playbook: ActionResponse = previously_linked_playbooks[0]
     else:
@@ -336,6 +342,7 @@ def _link_playbook(
         )
         linked_playbook = security_insights_client.alert_rules.create_or_update_action(
             resource_group_name,
+            DEFAULT_RESOURCE_PROVIDER,
             workspace_name,
             rule_id,
             playbook_name,
@@ -352,9 +359,10 @@ def _unlink_all_playbooks(
 ):
     linked_playbooks: List[ActionResponse] = security_insights_client.actions.list_by_alert_rule(
         resource_group_name,
+        DEFAULT_RESOURCE_PROVIDER,
         workspace_name,
         rule_id
-    ).advance_page()
+    ).value
     for linked_playbook in linked_playbooks:
         security_insights_client.alert_rules.delete_action(
             resource_group_name,
@@ -386,12 +394,16 @@ def _create_or_update_data_source(
                                                                               workspace_name,
                                                                               parser['function_id'])
         parser['etag'] = existing_parser.additional_properties['etag']
-    except CloudError:
+    except Exception:
         pass
     try:
-        saved_search_id = f"subscriptions/{subscription_id}/resourceGroups/{resource_group_name}/providers/Microsoft.OperationalInsights/workspaces/{workspace_name}/savedSearches/{parser['function_id']}"
         saved_search = SavedSearch(
-            id=saved_search_id,
+            id=SAVED_SEARCH_ID_TEMPLATE.format(
+                subscription_id,
+                resource_group_name,
+                workspace_name,
+                parser['function_id']
+            ),
             display_name=parser['display_name'],
             function_alias=parser['display_name'],
             query=parser['query'],
@@ -401,7 +413,7 @@ def _create_or_update_data_source(
         created_saved_search: SavedSearch = loganalytics_client.saved_searches.create_or_update(
             resource_group_name, workspace_name, parser['function_id'], saved_search
         )
-    except CloudError as azCloudError:
+    except Exception as azCloudError:
         logger.error('Unable to create/update the parser %s due to %s', data_source_file, str(azCloudError))
         raise azCloudError
     return created_saved_search

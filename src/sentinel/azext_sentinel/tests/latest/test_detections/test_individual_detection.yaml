@@ -13,6 +13,14 @@ tactics: [
 ]
 suppression_duration: 'P10D'
 suppression_enabled: True
+incident_configuration:
+  create_incident: True
+  grouping_configuration:
+    enabled: True
+    reopen_closed_incident: True
+    lookback_duration: 'PT5M'
+    entities_matching_method: 'All'
+    group_by_entities: ['Account']
 query: |
   datatable (SomeInt:int, SomeString:string) [
     100, "Foo",
