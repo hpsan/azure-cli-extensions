@@ -16,11 +16,11 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
   response:
     body:
       string: '{"error":{"code":"NotFound","message":"Cannot find rule with resource
-        name ''5b8d86f5-26a8-49b8-ba37-b35286e485ei'' for workspaceId ''15ef441f-5808-4b76-87d8-75cd01c88df6''."}}'
+        name ''5b8d86f5-26a8-49b8-ba37-b35286e485ei'' for workspaceId ''36e35b42-338d-450f-a966-dd3260399b64''."}}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
@@ -31,7 +31,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:36 GMT
+      - Tue, 28 Jul 2020 13:48:09 GMT
       expires:
       - '-1'
       pragma:
@@ -52,9 +52,9 @@ interactions:
       "triggerThreshold": 5, "description": "cliAlert", "displayName": "CliAlertDescription",
       "enabled": true, "suppressionDuration": "P10D", "suppressionEnabled": true,
       "tactics": ["PrivilegeEscalation"], "incidentConfiguration": {"createIncident":
-      true, "groupingConfiguration": {"enabled": false, "reopenClosedIncident": true,
-      "lookbackDuration": "P5M", "entitiesMatchingMethod": "All", "groupByEntities":
-      ["Account", "Ip"]}}}}'
+      true, "groupingConfiguration": {"enabled": true, "reopenClosedIncident": true,
+      "lookbackDuration": "PT5M", "entitiesMatchingMethod": "All", "groupByEntities":
+      ["Account"]}}}}'
     headers:
       Accept:
       - application/json
@@ -65,7 +65,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '668'
+      - '662'
       Content-Type:
       - application/json; charset=utf-8
       ParameterSetName:
@@ -74,23 +74,23 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei","name":"5b8d86f5-26a8-49b8-ba37-b35286e485ei","etag":"\"1b00eccf-0000-0100-0000-5f1f5c960000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei","name":"5b8d86f5-26a8-49b8-ba37-b35286e485ei","etag":"\"4400550e-0000-0100-0000-5f202c9a0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
         (SomeInt:int, SomeString:string) [\n  100, \"Foo\",\n  200, \"Bar\",\n]\n|
-        limit 1\n","queryFrequency":"P5D","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P10D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":true,"lookbackDuration":"P150D","entitiesMatchingMethod":"All","groupByEntities":["Account","Ip"]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-27T23:00:37.5383068Z"}}'
+        limit 1\n","queryFrequency":"P5D","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P10D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":true,"reopenClosedIncident":true,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":["Account"]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-28T13:48:09.6130718Z"}}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
       cache-control:
       - no-cache
       content-length:
-      - '1110'
+      - '1103'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:37 GMT
+      - Tue, 28 Jul 2020 13:48:10 GMT
       expires:
       - '-1'
       pragma:
@@ -123,7 +123,7 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei/actions?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei/actions?api-version=2019-01-01-preview
   response:
     body:
       string: '{"value":[]}'
@@ -135,7 +135,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:38 GMT
+      - Tue, 28 Jul 2020 13:48:10 GMT
       expires:
       - '-1'
       pragma:
@@ -170,23 +170,23 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei","name":"5b8d86f5-26a8-49b8-ba37-b35286e485ei","etag":"\"1b00eccf-0000-0100-0000-5f1f5c960000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei","name":"5b8d86f5-26a8-49b8-ba37-b35286e485ei","etag":"\"4400550e-0000-0100-0000-5f202c9a0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
         (SomeInt:int, SomeString:string) [\n  100, \"Foo\",\n  200, \"Bar\",\n]\n|
-        limit 1\n","queryFrequency":"P5D","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P10D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":true,"lookbackDuration":"P150D","entitiesMatchingMethod":"All","groupByEntities":["Account","Ip"]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-27T23:00:37.5383068Z"}}'
+        limit 1\n","queryFrequency":"P5D","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P10D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":true,"reopenClosedIncident":true,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":["Account"]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-28T13:48:09.6130718Z"}}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
       cache-control:
       - no-cache
       content-length:
-      - '1110'
+      - '1103'
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:39 GMT
+      - Tue, 28 Jul 2020 13:48:11 GMT
       expires:
       - '-1'
       pragma:
@@ -223,7 +223,7 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: DELETE
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485ei?api-version=2019-01-01-preview
   response:
     body:
       string: '{}'
@@ -237,7 +237,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:40 GMT
+      - Tue, 28 Jul 2020 13:48:13 GMT
       expires:
       - '-1'
       pragma:
@@ -274,11 +274,11 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy?api-version=2019-01-01-preview
   response:
     body:
       string: '{"error":{"code":"NotFound","message":"Cannot find rule with resource
-        name ''5b8d86f5-26a8-49b8-ba37-b35286e485hy'' for workspaceId ''15ef441f-5808-4b76-87d8-75cd01c88df6''."}}'
+        name ''5b8d86f5-26a8-49b8-ba37-b35286e485hy'' for workspaceId ''36e35b42-338d-450f-a966-dd3260399b64''."}}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
@@ -289,7 +289,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:42 GMT
+      - Tue, 28 Jul 2020 13:48:13 GMT
       expires:
       - '-1'
       pragma:
@@ -329,12 +329,12 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy?api-version=2019-01-01-preview
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hy","etag":"\"1b00f9cf-0000-0100-0000-5f1f5c9a0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hy","etag":"\"4400980e-0000-0100-0000-5f202c9f0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
         (SomeInt:int, SomeString:string) [\n  100, \"Foo\",\n  200, \"Bar\",\n]\n|
-        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-27T23:00:42.2828869Z"}}'
+        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-28T13:48:14.2577727Z"}}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
@@ -345,7 +345,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:42 GMT
+      - Tue, 28 Jul 2020 13:48:15 GMT
       expires:
       - '-1'
       pragma:
@@ -378,7 +378,7 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy/actions?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy/actions?api-version=2019-01-01-preview
   response:
     body:
       string: '{"value":[]}'
@@ -390,7 +390,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:43 GMT
+      - Tue, 28 Jul 2020 13:48:15 GMT
       expires:
       - '-1'
       pragma:
@@ -425,11 +425,11 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz?api-version=2019-01-01-preview
   response:
     body:
       string: '{"error":{"code":"NotFound","message":"Cannot find rule with resource
-        name ''5b8d86f5-26a8-49b8-ba37-b35286e485hz'' for workspaceId ''15ef441f-5808-4b76-87d8-75cd01c88df6''."}}'
+        name ''5b8d86f5-26a8-49b8-ba37-b35286e485hz'' for workspaceId ''36e35b42-338d-450f-a966-dd3260399b64''."}}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
@@ -440,7 +440,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:43 GMT
+      - Tue, 28 Jul 2020 13:48:16 GMT
       expires:
       - '-1'
       pragma:
@@ -480,12 +480,12 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: PUT
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz?api-version=2019-01-01-preview
   response:
     body:
-      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hz","etag":"\"1b0000d0-0000-0100-0000-5f1f5c9c0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
+      string: '{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hz","etag":"\"4400aa0e-0000-0100-0000-5f202ca10000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
         (SomeInt:int, SomeString:string) [\n  100, \"Foo\",\n  200, \"Bar\",\n]\n|
-        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-27T23:00:43.5863495Z"}}'
+        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-28T13:48:16.7281624Z"}}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
@@ -496,7 +496,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:44 GMT
+      - Tue, 28 Jul 2020 13:48:16 GMT
       expires:
       - '-1'
       pragma:
@@ -529,7 +529,7 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz/actions?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz/actions?api-version=2019-01-01-preview
   response:
     body:
       string: '{"value":[]}'
@@ -541,7 +541,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:44 GMT
+      - Tue, 28 Jul 2020 13:48:17 GMT
       expires:
       - '-1'
       pragma:
@@ -576,14 +576,14 @@ interactions:
       - python/3.7.7 (Darwin-19.5.0-x86_64-i386-64bit) msrest/0.6.17 msrest_azure/0.6.4
         azure-mgmt-securityinsight/2019-01-01-preview Azure-SDK-For-Python AZURECLI/2.9.1
     method: GET
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules?api-version=2019-01-01-preview
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules?api-version=2019-01-01-preview
   response:
     body:
-      string: '{"value":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hy","etag":"\"1b00f9cf-0000-0100-0000-5f1f5c9a0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
+      string: '{"value":[{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hy","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hy","etag":"\"4400980e-0000-0100-0000-5f202c9f0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
         (SomeInt:int, SomeString:string) [\n  100, \"Foo\",\n  200, \"Bar\",\n]\n|
-        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-27T23:00:42.2828869Z"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_vibbkut/providers/Microsoft.OperationalInsights/workspaces/clitest64i3ngudb3qq3mqmn/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hz","etag":"\"1b0000d0-0000-0100-0000-5f1f5c9c0000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
+        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-28T13:48:14.2577727Z"}},{"id":"/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test_sentinel_rg_axb4ets/providers/Microsoft.OperationalInsights/workspaces/clitestae74quhgnzkywwikc/providers/Microsoft.SecurityInsights/alertRules/5b8d86f5-26a8-49b8-ba37-b35286e485hz","name":"5b8d86f5-26a8-49b8-ba37-b35286e485hz","etag":"\"4400aa0e-0000-0100-0000-5f202ca10000\"","type":"Microsoft.SecurityInsights/alertRules","kind":"Scheduled","properties":{"severity":"Low","query":"datatable
         (SomeInt:int, SomeString:string) [\n  100, \"Foo\",\n  200, \"Bar\",\n]\n|
-        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-27T23:00:43.5863495Z"}}]}'
+        limit 1","queryFrequency":"PT5H","queryPeriod":"P5D","triggerOperator":"GreaterThan","triggerThreshold":5,"suppressionDuration":"P1D","suppressionEnabled":true,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","entitiesMatchingMethod":"All","groupByEntities":[]}},"displayName":"CliAlertDescription","enabled":true,"description":"cliAlert","tactics":["PrivilegeEscalation","InitialAccess"],"alertRuleTemplateName":null,"lastModifiedUtc":"2020-07-28T13:48:16.7281624Z"}}]}'
     headers:
       api-supported-versions:
       - 2019-01-01-preview
@@ -594,7 +594,7 @@ interactions:
       content-type:
       - application/json; charset=utf-8
       date:
-      - Mon, 27 Jul 2020 23:00:45 GMT
+      - Tue, 28 Jul 2020 13:48:19 GMT
       expires:
       - '-1'
       pragma:
@@ -633,7 +633,7 @@ interactions:
       accept-language:
       - en-US
     method: DELETE
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_vibbkut/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2019-07-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_axb4ets/providers/Microsoft.Resources/deployments/mock-deployment?api-version=2019-07-01
   response:
     body:
       string: ''
@@ -641,7 +641,7 @@ interactions:
       cache-control:
       - no-cache
       date:
-      - Mon, 27 Jul 2020 23:00:46 GMT
+      - Tue, 28 Jul 2020 13:48:20 GMT
       expires:
       - '-1'
       pragma:
@@ -676,7 +676,7 @@ interactions:
       accept-language:
       - en-US
     method: DELETE
-    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_vibbkut?api-version=2019-07-01
+    uri: https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/test_sentinel_rg_axb4ets?api-version=2019-07-01
   response:
     body:
       string: ''
@@ -686,11 +686,11 @@ interactions:
       content-length:
       - '0'
       date:
-      - Mon, 27 Jul 2020 23:00:46 GMT
+      - Tue, 28 Jul 2020 13:48:21 GMT
       expires:
       - '-1'
       location:
-      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1URVNUOjVGU0VOVElORUw6NUZSRzo1RlZJQkJLVVQtRUFTVFVTIiwiam9iTG9jYXRpb24iOiJlYXN0dXMifQ?api-version=2019-07-01
+      - https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1URVNUOjVGU0VOVElORUw6NUZSRzo1RkFYQjRFVFMtRUFTVFVTIiwiam9iTG9jYXRpb24iOiJlYXN0dXMifQ?api-version=2019-07-01
       pragma:
       - no-cache
       strict-transport-security:
@@ -698,7 +698,7 @@ interactions:
       x-content-type-options:
       - nosniff
       x-ms-ratelimit-remaining-subscription-deletes:
-      - '14998'
+      - '14999'
     status:
       code: 202
       message: Accepted
