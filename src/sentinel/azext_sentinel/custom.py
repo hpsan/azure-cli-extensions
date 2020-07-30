@@ -37,7 +37,6 @@ from .constants import (
     RESOURCE_DEFAULTS,
     ResourceConfig,
     ResourceFetchMethod,
-    SENTINEL_POST_ALERT_TRIGGER_PATH,
 )
 from .vendored_sdks.logic_app.mgmt.logic.logic_management_client import (
     LogicManagementClient,
@@ -124,9 +123,9 @@ def create_detections(
 
 
 def validate_detections(
-        detections_directory: Optional[str] = None,
-        detection_file: Optional[str] = None,
-        detection_schema: Optional[str] = None,
+    detections_directory: Optional[str] = None,
+    detection_file: Optional[str] = None,
+    detection_schema: Optional[str] = None,
 ) -> None:
     """Validates the detections against its configured JSON schema"""
     validate_resources(
@@ -138,11 +137,11 @@ def validate_detections(
 
 
 def generate_detection(
-        detections_directory: Optional[str] = None,
-        skip_interactive: Optional[bool] = False,
-        name: Optional[str] = None,
-        create_directory: Optional[bool] = True,
-        with_documentation: Optional[bool] = True,
+    detections_directory: Optional[str] = None,
+    skip_interactive: Optional[bool] = False,
+    name: Optional[str] = None,
+    create_directory: Optional[bool] = True,
+    with_documentation: Optional[bool] = True,
 ):
     """Creates a scaffolding for the detection based on the configured template"""
     generate_resource(
@@ -156,13 +155,13 @@ def generate_detection(
 
 
 def create_data_sources(
-        cmd,
-        resource_group_name: str,
-        workspace_name: str,
-        data_sources_directory: Optional[str] = None,
-        data_source_file: Optional[str] = None,
-        data_source_schema: Optional[str] = None,
-        enable_validation: Optional[bool] = False,
+    cmd,
+    resource_group_name: str,
+    workspace_name: str,
+    data_sources_directory: Optional[str] = None,
+    data_source_file: Optional[str] = None,
+    data_source_schema: Optional[str] = None,
+    enable_validation: Optional[bool] = False,
 ) -> List[SavedSearch]:
     """
     Loads the data source config from the local file/dir, validates it and deploys it
@@ -195,11 +194,11 @@ def create_data_sources(
 
 
 def generate_data_source(
-        data_sources_directory: Optional[str] = None,
-        skip_interactive: Optional[bool] = False,
-        name: Optional[str] = None,
-        create_directory: Optional[bool] = True,
-        with_documentation: Optional[bool] = True,
+    data_sources_directory: Optional[str] = None,
+    skip_interactive: Optional[bool] = False,
+    name: Optional[str] = None,
+    create_directory: Optional[bool] = True,
+    with_documentation: Optional[bool] = True,
 ):
     """Creates a scaffolding for the data source based on the configured template"""
     generate_resource(
@@ -213,12 +212,12 @@ def generate_data_source(
 
 
 def generate_resource(
-        resource_type: ResourceType,
-        resources_directory: Optional[str] = None,
-        skip_interactive: Optional[bool] = False,
-        name: Optional[str] = None,
-        create_directory: Optional[bool] = False,
-        with_documentation: Optional[bool] = False,
+    resource_type: ResourceType,
+    resources_directory: Optional[str] = None,
+    skip_interactive: Optional[bool] = False,
+    name: Optional[str] = None,
+    create_directory: Optional[bool] = False,
+    with_documentation: Optional[bool] = False,
 ) -> None:
     """Creates a scaffolding for the given resource based on the configured template"""
     # Populate values for the resource
@@ -263,9 +262,9 @@ def generate_resource(
 
 
 def validate_data_sources(
-        data_sources_directory: Optional[str] = None,
-        data_source_file: Optional[str] = None,
-        data_source_schema: Optional[str] = None,
+    data_sources_directory: Optional[str] = None,
+    data_source_file: Optional[str] = None,
+    data_source_schema: Optional[str] = None,
 ):
     """Validates the data source against its configured JSON schema"""
     validate_resources(
@@ -277,10 +276,10 @@ def validate_data_sources(
 
 
 def validate_resources(
-        resource_type: ResourceType,
-        resources_directory: Optional[str] = None,
-        resource_file: Optional[str] = None,
-        resource_schema: Optional[str] = None,
+    resource_type: ResourceType,
+    resources_directory: Optional[str] = None,
+    resource_file: Optional[str] = None,
+    resource_schema: Optional[str] = None,
 ) -> None:
     """Validates the given resources against its configured JSON schema"""
     # TODO: check if there are resources with the same ID
@@ -306,9 +305,9 @@ def validate_resources(
 
 
 def _resolve_config_file(
-        resource_type: ResourceType,
-        resource_config: ResourceConfig,
-        preferred_config: Optional[str] = None,
+    resource_type: ResourceType,
+    resource_config: ResourceConfig,
+    preferred_config: Optional[str] = None,
 ) -> Path:
     """
     Returns the most local config. If `preferred_config` is provided, it returns it.
@@ -343,7 +342,7 @@ def _get_local_config_file(
 
 
 def _get_resource_files(
-        resource_file: Optional[str] = None, resources_directory: Optional[str] = None
+    resource_file: Optional[str] = None, resources_directory: Optional[str] = None
 ) -> Union[Generator[Path, None, None], List[Path]]:
     """ Gets all the YAML files in the folder or just returns the original file if `resource_file` is provided """
     if resources_directory:
@@ -459,7 +458,7 @@ def _unlink_all_playbooks(security_client: SecurityClient, rule_id: str):
 
 
 def _create_or_update_data_source(
-        analytics_client: AnalyticsClient, data_source_file: Path
+    analytics_client: AnalyticsClient, data_source_file: Path
 ) -> Optional[SavedSearch]:
     """
     Loads the data soure config from the local file/dir and deploys it. Note that at this point, it only deploys
@@ -501,7 +500,7 @@ def _create_or_update_data_source(
 
 
 def _create_documentation(
-        documentation_template: Path, detection_name: str, documentation_location: Path
+    documentation_template: Path, detection_name: str, documentation_location: Path
 ) -> None:
     documentation_template_content: str = documentation_template.read_text()
     documentation_content: str = (
