@@ -8,29 +8,28 @@ from .vendored_sdks.loganalytics.mgmt.loganalytics.models import SavedSearch
 from .vendored_sdks.logic_app.mgmt.logic.logic_management_client import (
     LogicManagementClient,
 )
+from .vendored_sdks.logic_app.mgmt.logic.models import WorkflowTriggerCallbackUrl
 from .vendored_sdks.security_insights import SecurityInsights
 
 from azext_sentinel.constants import (
-    FUNCTION_ID_KEY,
+    DEFAULT_TRIGGER_NAME,
     DISPLAY_NAME_KEY,
+    FUNCTION_ID_KEY,
     OperationType,
     QUERY_KEY,
     ETAG_KEY,
 )
 
 DEFAULT_RESOURCE_PROVIDER = "Microsoft.OperationalInsights"
-SAVED_SEARCH_ID_TEMPLATE = "subscriptions/{}/resourceGroups/{}/providers/" \
-                           "Microsoft.OperationalInsights/workspaces/{}/savedSearches/{}"
+SAVED_SEARCH_ID_TEMPLATE = (
+    "subscriptions/{}/resourceGroups/{}/providers/"
+    "Microsoft.OperationalInsights/workspaces/{}/savedSearches/{}"
+)
 PARSER_CATEGORY_NAME = "parser"
 RULE_ID_IDENTIFIER = "rule_id"
 
 
 class ParserParams:
-    function_id: Optional[str] = None
-    display_name: Optional[str] = None
-    query: Optional[str] = None
-    etag: Optional[str] = None
-
     def __init__(self, **kwargs):
         self.function_id = kwargs.get(FUNCTION_ID_KEY, None)
         self.display_name = kwargs.get(DISPLAY_NAME_KEY, None)
@@ -40,10 +39,10 @@ class ParserParams:
 
 class BaseClient(abc.ABC):
     def __init__(
-            self,
-            resource_group_name: str,
-            workspace_name: str,
-            resource_provider: Optional[str] = None,
+        self,
+        resource_group_name: str,
+        workspace_name: str,
+        resource_provider: Optional[str] = None,
     ):
         self.resource_group_name = resource_group_name
         self.workspace_name = workspace_name
@@ -51,7 +50,7 @@ class BaseClient(abc.ABC):
 
     @abc.abstractmethod
     def create_or_update_operation(
-            self, operation_type: OperationType, operation_id: str, operation, **kwargs
+        self, operation_type: OperationType, operation_id: str, operation, **kwargs
     ):
         ...
 
@@ -61,17 +60,17 @@ class BaseClient(abc.ABC):
 
     @abc.abstractmethod
     def delete_operation(
-            self, operation_type: OperationType, operation_id: str, **kwargs
+        self, operation_type: OperationType, operation_id: str, **kwargs
     ):
         ...
 
 
 class AnalyticsClient(BaseClient):
     def __init__(
-            self,
-            log_analytics_client: LogAnalyticsManagementClient,
-            subscription_id: str,
-            **kwargs,
+        self,
+        log_analytics_client: LogAnalyticsManagementClient,
+        subscription_id: str,
+        **kwargs,
     ):
         self.client = log_analytics_client
         self.subscription_id = subscription_id
@@ -95,7 +94,7 @@ class AnalyticsClient(BaseClient):
         return operation
 
     def generate_saved_search_from_parser_params(
-            self, parser: ParserParams, id_template: Optional[str] = None
+        self, parser: ParserParams, id_template: Optional[str] = None
     ) -> SavedSearch:
         id_template = id_template or SAVED_SEARCH_ID_TEMPLATE
         return SavedSearch(
@@ -113,7 +112,7 @@ class AnalyticsClient(BaseClient):
         )
 
     def create_or_update_operation(
-            self, operation_type: OperationType, operation_id: str, operation, **kwargs
+        self, operation_type: OperationType, operation_id: str, operation, **kwargs
     ):
         if operation_type is OperationType.SAVED_SEARCH:
             created_or_updated = self.saved_searches.create_or_update(
@@ -128,17 +127,17 @@ class AnalyticsClient(BaseClient):
         return created_or_updated
 
     def delete_operation(
-            self, operation_type: OperationType, operation_id: str, **kwargs
+        self, operation_type: OperationType, operation_id: str, **kwargs
     ):
         raise NotImplementedError
 
 
 class SecurityClient(BaseClient):
     def __init__(
-            self,
-            security_insight_client: SecurityInsights,
-            logic_management_client: LogicManagementClient,
-            **kwargs,
+        self,
+        security_insight_client: SecurityInsights,
+        logic_management_client: LogicManagementClient,
+        **kwargs,
     ):
         self.security_insight_client = security_insight_client
         self.logic_management_client = logic_management_client
@@ -155,6 +154,10 @@ class SecurityClient(BaseClient):
     @property
     def workflows(self):
         return self.logic_management_client.workflows
+
+    @property
+    def workflow_version_triggers(self):
+        return self.logic_management_client.workflow_version_triggers
 
     def get_operation(self, operation_type: OperationType, operation_id: str, **kwargs):
         if operation_type is OperationType.ALERT_RULE:
@@ -176,7 +179,7 @@ class SecurityClient(BaseClient):
         return operation
 
     def create_or_update_operation(
-            self, operation_type: OperationType, operation_id: str, operation, **kwargs
+        self, operation_type: OperationType, operation_id: str, operation, **kwargs
     ):
         if operation_type is OperationType.ALERT_RULE:
             created_or_updated = self.alert_rules.create_or_update(
@@ -209,8 +212,23 @@ class SecurityClient(BaseClient):
             **kwargs,
         )
 
+    def get_workflow_callback_url(
+        self,
+        workflow_name: str,
+        version_id: str,
+        trigger_name: Optional[str] = None,
+        **kwargs,
+    ) -> WorkflowTriggerCallbackUrl:
+        return self.workflow_version_triggers.list_callback_url(
+            resource_group_name=self.resource_group_name,
+            workflow_name=workflow_name,
+            version_id=version_id,
+            trigger_name=trigger_name or DEFAULT_TRIGGER_NAME,
+            **kwargs,
+        )
+
     def delete_operation(
-            self, operation_type: OperationType, operation_id: str, **kwargs
+        self, operation_type: OperationType, operation_id: str, **kwargs
     ):
         if operation_type is OperationType.ACTION:
             deleted_operation = self.alert_rules.delete_action(

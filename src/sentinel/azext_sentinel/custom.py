@@ -4,12 +4,13 @@
 # --------------------------------------------------------------------------------------------
 import os
 import uuid
+import jsonschema
+import yaml
+
 
 from pathlib import Path
 from typing import List, Union, Generator, Optional
 
-import jsonschema
-import yaml
 from azext_sentinel.clients import ParserParams
 from azure.cli.core.commands.client_factory import (
     get_mgmt_service_client,
@@ -31,7 +32,6 @@ from .constants import (
     RESOURCE_DEFAULTS,
     ResourceConfig,
     ResourceFetchMethod,
-    SENTINEL_POST_ALERT_TRIGGER_PATH,
 )
 from .vendored_sdks.logic_app.mgmt.logic.logic_management_client import (
     LogicManagementClient,
@@ -69,14 +69,14 @@ class AlertParams:
 
 
 def create_detections(
-        cmd,
-        client: SecurityInsights,
-        resource_group_name: str,
-        workspace_name: str,
-        detections_directory: Optional[str] = None,
-        detection_file: Optional[str] = None,
-        detection_schema: Optional[str] = None,
-        enable_validation: Optional[bool] = False,
+    cmd,
+    client: SecurityInsights,
+    resource_group_name: str,
+    workspace_name: str,
+    detections_directory: Optional[str] = None,
+    detection_file: Optional[str] = None,
+    detection_schema: Optional[str] = None,
+    enable_validation: Optional[bool] = False,
 ) -> List[AlertRule]:
     """Loads the detection config from the local file/dir, validates it and deploys it"""
     security_insights_client = client
@@ -103,9 +103,9 @@ def create_detections(
 
 
 def validate_detections(
-        detections_directory: Optional[str] = None,
-        detection_file: Optional[str] = None,
-        detection_schema: Optional[str] = None,
+    detections_directory: Optional[str] = None,
+    detection_file: Optional[str] = None,
+    detection_schema: Optional[str] = None,
 ) -> None:
     """Validates the detections against its configured JSON schema"""
     validate_resources(
@@ -117,11 +117,11 @@ def validate_detections(
 
 
 def generate_detection(
-        detections_directory: Optional[str] = None,
-        skip_interactive: Optional[bool] = False,
-        name: Optional[str] = None,
-        create_directory: Optional[bool] = True,
-        with_documentation: Optional[bool] = True,
+    detections_directory: Optional[str] = None,
+    skip_interactive: Optional[bool] = False,
+    name: Optional[str] = None,
+    create_directory: Optional[bool] = True,
+    with_documentation: Optional[bool] = True,
 ):
     """Creates a scaffolding for the detection based on the configured template"""
     generate_resource(
@@ -135,13 +135,13 @@ def generate_detection(
 
 
 def create_data_sources(
-        cmd,
-        resource_group_name: str,
-        workspace_name: str,
-        data_sources_directory: Optional[str] = None,
-        data_source_file: Optional[str] = None,
-        data_source_schema: Optional[str] = None,
-        enable_validation: Optional[bool] = False,
+    cmd,
+    resource_group_name: str,
+    workspace_name: str,
+    data_sources_directory: Optional[str] = None,
+    data_source_file: Optional[str] = None,
+    data_source_schema: Optional[str] = None,
+    enable_validation: Optional[bool] = False,
 ) -> List[SavedSearch]:
     """
     Loads the data source config from the local file/dir, validates it and deploys it
@@ -174,11 +174,11 @@ def create_data_sources(
 
 
 def generate_data_source(
-        data_sources_directory: Optional[str] = None,
-        skip_interactive: Optional[bool] = False,
-        name: Optional[str] = None,
-        create_directory: Optional[bool] = True,
-        with_documentation: Optional[bool] = True,
+    data_sources_directory: Optional[str] = None,
+    skip_interactive: Optional[bool] = False,
+    name: Optional[str] = None,
+    create_directory: Optional[bool] = True,
+    with_documentation: Optional[bool] = True,
 ):
     """Creates a scaffolding for the data source based on the configured template"""
     generate_resource(
@@ -192,12 +192,12 @@ def generate_data_source(
 
 
 def generate_resource(
-        resource_type: ResourceType,
-        resources_directory: Optional[str] = None,
-        skip_interactive: Optional[bool] = False,
-        name: Optional[str] = None,
-        create_directory: Optional[bool] = False,
-        with_documentation: Optional[bool] = False,
+    resource_type: ResourceType,
+    resources_directory: Optional[str] = None,
+    skip_interactive: Optional[bool] = False,
+    name: Optional[str] = None,
+    create_directory: Optional[bool] = False,
+    with_documentation: Optional[bool] = False,
 ) -> None:
     """Creates a scaffolding for the given resource based on the configured template"""
     # Populate values for the resource
@@ -240,9 +240,9 @@ def generate_resource(
 
 
 def validate_data_sources(
-        data_sources_directory: Optional[str] = None,
-        data_source_file: Optional[str] = None,
-        data_source_schema: Optional[str] = None,
+    data_sources_directory: Optional[str] = None,
+    data_source_file: Optional[str] = None,
+    data_source_schema: Optional[str] = None,
 ):
     """Validates the data source against its configured JSON schema"""
     validate_resources(
@@ -254,10 +254,10 @@ def validate_data_sources(
 
 
 def validate_resources(
-        resource_type: ResourceType,
-        resources_directory: Optional[str] = None,
-        resource_file: Optional[str] = None,
-        resource_schema: Optional[str] = None,
+    resource_type: ResourceType,
+    resources_directory: Optional[str] = None,
+    resource_file: Optional[str] = None,
+    resource_schema: Optional[str] = None,
 ) -> None:
     """Validates the given resources against its configured JSON schema"""
     # TODO: check if there are resources with the same ID
@@ -270,7 +270,9 @@ def validate_resources(
     for file in resource_files:
         logger.info(
             "Validating %s %s with schema at %s",
-            resource_type.value, file, resource_schema_file
+            resource_type.value,
+            file,
+            resource_schema_file,
         )
         alert_rule = yaml.safe_load(file.read_text())
         try:
@@ -281,9 +283,9 @@ def validate_resources(
 
 
 def _resolve_config_file(
-        resource_type: ResourceType,
-        resource_config: ResourceConfig,
-        preferred_config: Optional[str] = None,
+    resource_type: ResourceType,
+    resource_config: ResourceConfig,
+    preferred_config: Optional[str] = None,
 ) -> Path:
     """
     Returns the most local config. If `preferred_config` is provided, it returns it.
@@ -301,7 +303,7 @@ def _resolve_config_file(
 
 
 def _get_local_config_file(
-        resource_type: ResourceType, resource_config: ResourceConfig
+    resource_type: ResourceType, resource_config: ResourceConfig
 ) -> Optional[Path]:
     """Loads the local config file if available by traversing upto the HOME directory of the user"""
     file_name = RESOURCE_DEFAULTS[resource_type][resource_config][
@@ -318,7 +320,7 @@ def _get_local_config_file(
 
 
 def _get_resource_files(
-        resource_file: Optional[str] = None, resources_directory: Optional[str] = None
+    resource_file: Optional[str] = None, resources_directory: Optional[str] = None
 ) -> Union[Generator[Path, None, None], List[Path]]:
     """ Gets all the YAML files in the folder or just returns the original file if `resource_file` is provided """
     if resources_directory:
@@ -330,7 +332,7 @@ def _get_resource_files(
 
 
 def _create_or_update_detection(
-        security_client: SecurityClient, detection_file: Path
+    security_client: SecurityClient, detection_file: Path
 ) -> AlertRule:
     """Loads the detection config from the local file/dir and deploys it"""
     alert_dict = yaml.safe_load(detection_file.read_text())
@@ -345,7 +347,6 @@ def _create_or_update_detection(
         pass
     # Create the rule
     try:
-        # alert_rule = ScheduledAlertRule(**alert_params)
         created_alert: AlertRule = security_client.create_or_update_operation(
             operation_type=OperationType.ALERT_RULE,
             operation_id=alert_params.rule_id,
@@ -372,31 +373,33 @@ def _create_or_update_detection(
 
 
 def _link_playbook(
-        security_client: SecurityClient, rule_id: str, playbook_name: str
+    security_client: SecurityClient, rule_id: str, playbook_name: str
 ) -> ActionResponse:
 
-    existing_playbooks: List[
-        ActionResponse
-    ] = security_client.list_actions_by_alert_rule(rule_id=rule_id).value
-    if existing_playbooks and existing_playbooks[0].name == playbook_name:
-        linked_playbook: ActionResponse = existing_playbooks[0]
-    else:
-        _unlink_all_playbooks(security_client=security_client, rule_id=rule_id)
-        playbook = security_client.get_operation(
-            operation_type=OperationType.WORKFLOW, operation_id=playbook_name
-        )
-        trigger_uri = f"{playbook.access_endpoint}{SENTINEL_POST_ALERT_TRIGGER_PATH}"
-        action_request = ActionRequest(
-            logic_app_resource_id=playbook.id, trigger_uri=trigger_uri,
-        )
-        linked_playbook = security_client.create_or_update_operation(
-            operation_type=OperationType.ACTION,
-            operation_id=playbook_name,
-            operation=action_request,
-            rule_id=rule_id,
-        )
+    # TODO: Uncomment the following lines when all the existing playbooks' trigger uris get fixed
+    # existing_playbooks = security_client.list_actions_by_alert_rule(rule_id=rule_id).value
+    # if existing_playbooks and existing_playbooks[0].name == playbook_name:
+    #     linked_playbook: ActionResponse = existing_playbooks[0]
+    # else:
+    _unlink_all_playbooks(security_client=security_client, rule_id=rule_id)
+    playbook = security_client.get_operation(
+        operation_type=OperationType.WORKFLOW, operation_id=playbook_name
+    )
+    workflow_callback_url = security_client.get_workflow_callback_url(
+        workflow_name=playbook.name, version_id=playbook.version
+    )
+    trigger_uri = workflow_callback_url.value
+    action_request = ActionRequest(
+        logic_app_resource_id=playbook.id, trigger_uri=trigger_uri,
+    )
+    linked_playbook = security_client.create_or_update_operation(
+        operation_type=OperationType.ACTION,
+        operation_id=playbook_name,
+        operation=action_request,
+        rule_id=rule_id,
+    )
 
-        return linked_playbook
+    return linked_playbook
 
 
 def _unlink_all_playbooks(security_client: SecurityClient, rule_id: str):
@@ -412,7 +415,7 @@ def _unlink_all_playbooks(security_client: SecurityClient, rule_id: str):
 
 
 def _create_or_update_data_source(
-        analytics_client: AnalyticsClient, data_source_file: Path
+    analytics_client: AnalyticsClient, data_source_file: Path
 ) -> Optional[SavedSearch]:
     """
     Loads the data soure config from the local file/dir and deploys it. Note that at this point, it only deploys
@@ -454,7 +457,7 @@ def _create_or_update_data_source(
 
 
 def _create_documentation(
-        documentation_template: Path, detection_name: str, documentation_location: Path
+    documentation_template: Path, detection_name: str, documentation_location: Path
 ) -> None:
     documentation_template_content: str = documentation_template.read_text()
     documentation_content: str = "# {} \n \n".format(

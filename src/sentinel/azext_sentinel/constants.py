@@ -22,8 +22,7 @@ DISPLAY_NAME_KEY = "display_name"
 QUERY_KEY = "query"
 ETAG_KEY = "etag"
 
-
-SENTINEL_POST_ALERT_TRIGGER_PATH = '/triggers/When_a_response_to_an_Azure_Sentinel_alert_is_triggered/paths/invoke'
+DEFAULT_TRIGGER_NAME = "When_a_response_to_an_Azure_Sentinel_alert_is_triggered"
 
 
 class OperationType(Enum):
