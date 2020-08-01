@@ -216,6 +216,12 @@ class SecurityClient(BaseClient):
             **kwargs,
         )
 
+    def is_action_updated(self, rule_id: str, action_name: str, **kwargs) -> bool:
+        existing_actions = self.list_actions_by_alert_rule(rule_id=rule_id, **kwargs).value
+        if existing_actions and existing_actions[0].name == action_name:
+            return False
+        return True
+
     def delete_operation(
         self, operation_type: OperationType, operation_id: str, **kwargs
     ):

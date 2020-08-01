@@ -343,14 +343,9 @@ def _create_or_update_detection(
 
     # Link the playbook if it is configured
     if alert_params.playbook_name:
-        existing_playbooks = security_client.list_actions_by_alert_rule(
-            rule_id=alert_params.rule_id
-        ).value
-        if (
-            not existing_playbooks
-            or alert_params.playbook_name != existing_playbooks[0].name
-            or force_link_playbook
-        ):
+        if security_client.is_action_updated(
+            rule_id=alert_params.rule_id, action_name=alert_params.playbook_name
+        ) or force_link_playbook:
             _link_playbook(
                 security_client=security_client,
                 rule_id=alert_params.rule_id,
