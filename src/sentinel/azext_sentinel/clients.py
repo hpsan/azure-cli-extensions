@@ -2,6 +2,7 @@ import abc
 
 from typing import Optional
 
+from azext_sentinel.custom_models import ParserParams
 
 from .vendored_sdks.loganalytics.mgmt.loganalytics import LogAnalyticsManagementClient
 from .vendored_sdks.loganalytics.mgmt.loganalytics.models import SavedSearch
@@ -13,11 +14,7 @@ from .vendored_sdks.security_insights import SecurityInsights
 
 from azext_sentinel.constants import (
     DEFAULT_TRIGGER_NAME,
-    DISPLAY_NAME_KEY,
-    FUNCTION_ID_KEY,
     OperationType,
-    QUERY_KEY,
-    ETAG_KEY,
 )
 
 DEFAULT_RESOURCE_PROVIDER = "Microsoft.OperationalInsights"
@@ -27,14 +24,6 @@ SAVED_SEARCH_ID_TEMPLATE = (
 )
 PARSER_CATEGORY_NAME = "parser"
 RULE_ID_IDENTIFIER = "rule_id"
-
-
-class ParserParams:
-    def __init__(self, **kwargs):
-        self.function_id = kwargs.get(FUNCTION_ID_KEY, None)
-        self.display_name = kwargs.get(DISPLAY_NAME_KEY, None)
-        self.query = kwargs.get(QUERY_KEY, None)
-        self.etag = kwargs.get(ETAG_KEY, None)
 
 
 class BaseClient(abc.ABC):

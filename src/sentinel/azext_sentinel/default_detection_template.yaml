@@ -42,16 +42,16 @@ suppression_enabled: True
 # example - playbook_name: 'PostAlertActions-SentinelTrigger'
 playbook_name: <PLACEHOLDER>
 
-# Incident configuration settings when this alert rule is triggered
+# Incident configuration settings when this detection is triggered
 incident_configuration:
 
-  # Create incidents from alerts triggered by this analytic rule
+  # Create incidents from alerts triggered by this detection
   create_incident: True
 
-  # Grouping configuration settings associated with this analytic rule
+  # Grouping configuration settings associated with this detection
   grouping_configuration:
 
-    # Group related alerts, triggered by this analytics rule, into incidents
+    # Group related alerts, triggered by this detection, into incidents
     enabled: False
 
     # Limit the group to alerts created within the selected time frame (in ISO 8601 duration format)
@@ -60,7 +60,7 @@ incident_configuration:
     # Re-open closed matching incident (Can be enabled only if grouping configuration is enabled)
     reopen_closed_incident: False
 
-    # Group alerts triggered by this analytics rule into a single incident by this matching method
+    # Group alerts triggered by this detection into a single incident by this matching method
     # Options: All (recommended), Custom, None
     entities_matching_method: <PLACEHOLDER>
 

@@ -11,7 +11,7 @@ import yaml
 from pathlib import Path
 from typing import List, Union, Generator, Optional
 
-from azext_sentinel.clients import ParserParams
+from azext_sentinel.custom_models import ParserParams, AlertParams
 from azure.cli.core.commands.client_factory import (
     get_mgmt_service_client,
     get_subscription_id,
@@ -41,31 +41,9 @@ from .vendored_sdks.security_insights.models import (
     AlertRule,
     ActionResponse,
     ActionRequest,
-    ScheduledAlertRule,
 )
 
 logger = get_logger(__name__)
-
-
-PLAYBOOK_NAME_KEY = "playbook_name"
-ADDITIONAL_METADATA_KEY = "additional_metadata"
-ID_KEY = "id"
-
-
-class AlertParams:
-    def __init__(self, **kwargs):
-        self.playbook_name = kwargs.pop(PLAYBOOK_NAME_KEY, None)
-        self.additional_metadata = kwargs.pop(ADDITIONAL_METADATA_KEY, None)
-        self.rule_id = kwargs[ID_KEY]
-        self.alert_rule = ScheduledAlertRule(**kwargs)
-
-    @property
-    def etag(self) -> Optional[str]:
-        return self.alert_rule.etag
-
-    @etag.setter
-    def etag(self, etag_value: str) -> None:
-        self.alert_rule.etag = etag_value
 
 
 def create_detections(
@@ -77,6 +55,7 @@ def create_detections(
     detection_file: Optional[str] = None,
     detection_schema: Optional[str] = None,
     enable_validation: Optional[bool] = False,
+    force_link_playbook: Optional[bool] = False,
 ) -> List[AlertRule]:
     """Loads the detection config from the local file/dir, validates it and deploys it"""
     security_insights_client = client
@@ -96,7 +75,9 @@ def create_detections(
     )
     return [
         _create_or_update_detection(
-            security_client=sentinel_client, detection_file=detection_file
+            security_client=sentinel_client,
+            detection_file=detection_file,
+            force_link_playbook=force_link_playbook,
         )
         for detection_file in detection_files
     ]
@@ -332,7 +313,7 @@ def _get_resource_files(
 
 
 def _create_or_update_detection(
-    security_client: SecurityClient, detection_file: Path
+    security_client: SecurityClient, detection_file: Path, force_link_playbook: bool
 ) -> AlertRule:
     """Loads the detection config from the local file/dir and deploys it"""
     alert_dict = yaml.safe_load(detection_file.read_text())
@@ -361,13 +342,24 @@ def _create_or_update_detection(
         raise azCloudError
 
     # Link the playbook if it is configured
-    _link_playbook(
-        security_client=security_client,
-        rule_id=alert_params.rule_id,
-        playbook_name=alert_params.playbook_name,
-    ) if alert_params.playbook_name else _unlink_all_playbooks(
-        security_client=security_client, rule_id=alert_params.rule_id
-    )
+    if alert_params.playbook_name:
+        existing_playbooks = security_client.list_actions_by_alert_rule(
+            rule_id=alert_params.rule_id
+        ).value
+        if (
+            not existing_playbooks
+            or alert_params.playbook_name != existing_playbooks[0].name
+            or force_link_playbook
+        ):
+            _link_playbook(
+                security_client=security_client,
+                rule_id=alert_params.rule_id,
+                playbook_name=alert_params.playbook_name,
+            )
+    else:
+        _unlink_all_playbooks(
+            security_client=security_client, rule_id=alert_params.rule_id
+        )
 
     return created_alert
 
@@ -376,11 +368,6 @@ def _link_playbook(
     security_client: SecurityClient, rule_id: str, playbook_name: str
 ) -> ActionResponse:
 
-    # TODO: Uncomment the following lines when all the existing playbooks' trigger uris get fixed
-    # existing_playbooks = security_client.list_actions_by_alert_rule(rule_id=rule_id).value
-    # if existing_playbooks and existing_playbooks[0].name == playbook_name:
-    #     linked_playbook: ActionResponse = existing_playbooks[0]
-    # else:
     _unlink_all_playbooks(security_client=security_client, rule_id=rule_id)
     playbook = security_client.get_operation(
         operation_type=OperationType.WORKFLOW, operation_id=playbook_name
@@ -424,7 +411,7 @@ def _create_or_update_data_source(
     data_source = yaml.safe_load(data_source_file.read_text())
     parser = data_source.get("parser")
     if not parser:
-        return None
+        return
 
     parser_params = ParserParams(**parser)
     # Fetch the existing parser to update if it already exists
