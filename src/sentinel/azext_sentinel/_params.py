@@ -20,8 +20,8 @@ def load_arguments(self, _):
                                             completer=FilesCompleter(allowednames=['json', 'yaml'], directories=False),
                                             type=file_type, help="File path of the detection schema")
     data_sources_directory_type = CLIArgumentType(options_list=['--data-sources-directory', '-d'],
-                                                 completer=DirectoriesCompleter(), type=file_type,
-                                                 help='Directory which contains data source files')
+                                                  completer=DirectoriesCompleter(), type=file_type,
+                                                  help='Directory which contains data source files')
     data_source_file_type = CLIArgumentType(options_list=['--data-source-file', '-f'],
                                             completer=FilesCompleter(allowednames=['json', 'yaml']),
                                             type=file_type, help="File path of the data source")

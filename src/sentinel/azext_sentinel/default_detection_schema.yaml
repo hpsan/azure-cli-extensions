@@ -96,6 +96,54 @@ properties:
     title: Detection Query
     description: The query that creates alerts for this detection
     type: string
+  incident_configuration:
+    title: Incident Configuration
+    description: The incident configuration settings
+    type: object
+    properties:
+      create_incident:
+        title: Incident Creation
+        description: Create incidents from alerts triggered by this analytics rule
+        type: boolean
+      grouping_configuration:
+        title: Grouping Configuration
+        description: Set how the alerts that are triggered by this analytics rule, are grouped into incidents.
+        type: object
+        properties:
+          enabled:
+            title: Grouping Enabled
+            description: Group related alerts, triggered by this analytics rule, into incidents
+            type: boolean
+          reopen_closed_incident:
+            title: Re-open Closed Incident
+            description: Re-open closed matching incidents
+            type: boolean
+          lookback_duration:
+            title: Lookback Duration
+            description: Limit the group to alerts created within the selected time frame
+            type: string
+            examples:
+              - P1D
+              - P14H
+          entities_matching_method:
+            title: Entities Matching Method
+            description: Group alerts triggered by this analytics rule into a single incident by
+            type: string
+            enum:
+              - All
+              - None
+              - Custom
+          group_by_entities:
+            title: Group By Entities
+            description: Grouping alerts into a single incident if the selected entities match
+            type: array
+            items:
+              type: string
+              enum:
+                - Account
+                - Host
+                - Ip
+                - Url
   additional_metadata:  # This should be removed in the public version
     title: Additional Metadata
     description: Additional metadata specific to an organization's installation of Sentinel
