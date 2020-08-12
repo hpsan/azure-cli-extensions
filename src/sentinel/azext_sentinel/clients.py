@@ -218,8 +218,22 @@ class SecurityClient(BaseClient):
 
     def is_action_updated(self, rule_id: str, action_name: str, **kwargs) -> bool:
         existing_actions = self.list_actions_by_alert_rule(rule_id=rule_id, **kwargs).value
-        if existing_actions and existing_actions[0].name == action_name:
-            return False
+        # New deployment of a resource (such as playbooks) changes its callback uri
+        if existing_actions:
+            existing_action = existing_actions[0]
+            existing_callback_uri = self.get_workflow_callback_url(
+                workflow_name=existing_action.name,
+                version_id=existing_action.version).value
+            new_action = self.get_operation(
+                operation_type=OperationType.WORKFLOW, operation_id=action_name
+            )
+            new_callback_uri = self.get_workflow_callback_url(
+                workflow_name=new_action.name, version_id=new_action.version
+            ).value
+
+            if existing_callback_uri == new_callback_uri:
+                return False
+
         return True
 
     def delete_operation(
