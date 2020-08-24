@@ -52,6 +52,7 @@ class AttackTactic(str, Enum):
     exfiltration = "Exfiltration"
     command_and_control = "CommandAndControl"
     impact = "Impact"
+    pre_attack = "PreAttack"
 
 
 class RelationTypes(str, Enum):
@@ -276,6 +277,12 @@ class GroupingEntityType(str, Enum):
     url = "Url"  #: Url entity
 
 
+class EventGroupingAggregationKind(str, Enum):
+
+    single_alert = "SingleAlert"
+    alert_per_result = "AlertPerResult"
+
+
 class ConfidenceLevel(str, Enum):
 
     unknown = "Unknown"  #: Unknown confidence, the is the default value
@@ -316,3 +323,24 @@ class AlertStatus(str, Enum):
     resolved = "Resolved"  #: Alert closed after handling
     dismissed = "Dismissed"  #: Alert dismissed as false positive
     in_progress = "InProgress"  #: Alert is being handled
+
+
+class SettingKind(str, Enum):
+
+    eyes_on = "EyesOn"
+    entity_analytics = "EntityAnalytics"
+    ueba = "Ueba"
+
+
+class UebaDataSources(str, Enum):
+
+    audit_logs = "AuditLogs"
+    azure_activity = "AzureActivity"
+    security_event = "SecurityEvent"
+    signin_logs = "SigninLogs"
+
+
+class Source(str, Enum):
+
+    localfile = "Local file"
+    remotestorage = "Remote storage"

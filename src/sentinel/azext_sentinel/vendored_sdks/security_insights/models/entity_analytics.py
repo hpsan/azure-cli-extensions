@@ -5,14 +5,11 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from msrest.serialization import Model
+from .settings import Settings
 
 
-class Settings(Model):
-    """The Setting.
-
-    You probably want to use the sub-classes and not this class directly. Known
-    sub-classes are: EyesOn, EntityAnalytics, Ueba
+class EntityAnalytics(Settings):
+    """Settings with single toggle.
 
     Variables are only populated by the server, and will be ignored when
     sending a request.
@@ -29,6 +26,8 @@ class Settings(Model):
     :type etag: str
     :param kind: Required. Constant filled by server.
     :type kind: str
+    :ivar is_enabled: Determines whether the setting is enable or disabled.
+    :vartype is_enabled: bool
     """
 
     _validation = {
@@ -36,6 +35,7 @@ class Settings(Model):
         'name': {'readonly': True},
         'type': {'readonly': True},
         'kind': {'required': True},
+        'is_enabled': {'readonly': True},
     }
 
     _attribute_map = {
@@ -44,16 +44,10 @@ class Settings(Model):
         'type': {'key': 'type', 'type': 'str'},
         'etag': {'key': 'etag', 'type': 'str'},
         'kind': {'key': 'kind', 'type': 'str'},
+        'is_enabled': {'key': 'properties.isEnabled', 'type': 'bool'},
     }
 
-    _subtype_map = {
-        'kind': {'EyesOn': 'EyesOn', 'EntityAnalytics': 'EntityAnalytics', 'Ueba': 'Ueba'}
-    }
-
-    def __init__(self, *, etag: str=None, **kwargs) -> None:
-        super(Settings, self).__init__(**kwargs)
-        self.id = None
-        self.name = None
-        self.type = None
-        self.etag = etag
-        self.kind = None
+    def __init__(self, **kwargs):
+        super(EntityAnalytics, self).__init__(**kwargs)
+        self.is_enabled = None
+        self.kind = 'EntityAnalytics'

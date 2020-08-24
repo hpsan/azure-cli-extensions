@@ -59,6 +59,9 @@ class ScheduledAlertRuleTemplate(AlertRuleTemplate):
     :param trigger_threshold: Required. The threshold triggers this alert
      rule.
     :type trigger_threshold: int
+    :param event_grouping_settings: The event grouping settings.
+    :type event_grouping_settings:
+     ~securityinsights.models.EventGroupingSettings
     :param tactics: The tactics of the alert rule template
     :type tactics: list[str or ~securityinsights.models.AttackTactic]
     """
@@ -98,10 +101,11 @@ class ScheduledAlertRuleTemplate(AlertRuleTemplate):
         'severity': {'key': 'properties.severity', 'type': 'str'},
         'trigger_operator': {'key': 'properties.triggerOperator', 'type': 'TriggerOperator'},
         'trigger_threshold': {'key': 'properties.triggerThreshold', 'type': 'int'},
+        'event_grouping_settings': {'key': 'properties.eventGroupingSettings', 'type': 'EventGroupingSettings'},
         'tactics': {'key': 'properties.tactics', 'type': '[str]'},
     }
 
-    def __init__(self, *, alert_rules_created_by_template_count: int, description: str, display_name: str, status, query: str, query_frequency, query_period, severity, trigger_operator, trigger_threshold: int, required_data_connectors=None, tactics=None, **kwargs) -> None:
+    def __init__(self, *, alert_rules_created_by_template_count: int, description: str, display_name: str, status, query: str, query_frequency, query_period, severity, trigger_operator, trigger_threshold: int, required_data_connectors=None, event_grouping_settings=None, tactics=None, **kwargs) -> None:
         super(ScheduledAlertRuleTemplate, self).__init__(**kwargs)
         self.alert_rules_created_by_template_count = alert_rules_created_by_template_count
         self.created_date_utc = None
@@ -115,5 +119,6 @@ class ScheduledAlertRuleTemplate(AlertRuleTemplate):
         self.severity = severity
         self.trigger_operator = trigger_operator
         self.trigger_threshold = trigger_threshold
+        self.event_grouping_settings = event_grouping_settings
         self.tactics = tactics
         self.kind = 'Scheduled'

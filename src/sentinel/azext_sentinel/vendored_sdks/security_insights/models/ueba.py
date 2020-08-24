@@ -5,14 +5,11 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from msrest.serialization import Model
+from .settings import Settings
 
 
-class Settings(Model):
-    """The Setting.
-
-    You probably want to use the sub-classes and not this class directly. Known
-    sub-classes are: EyesOn, EntityAnalytics, Ueba
+class Ueba(Settings):
+    """Settings with single toggle.
 
     Variables are only populated by the server, and will be ignored when
     sending a request.
@@ -29,6 +26,8 @@ class Settings(Model):
     :type etag: str
     :param kind: Required. Constant filled by server.
     :type kind: str
+    :param data_sources: The relevant data sources that enriched by ueba
+    :type data_sources: list[str or ~securityinsights.models.UebaDataSources]
     """
 
     _validation = {
@@ -44,16 +43,10 @@ class Settings(Model):
         'type': {'key': 'type', 'type': 'str'},
         'etag': {'key': 'etag', 'type': 'str'},
         'kind': {'key': 'kind', 'type': 'str'},
+        'data_sources': {'key': 'properties.dataSources', 'type': '[str]'},
     }
 
-    _subtype_map = {
-        'kind': {'EyesOn': 'EyesOn', 'EntityAnalytics': 'EntityAnalytics', 'Ueba': 'Ueba'}
-    }
-
-    def __init__(self, *, etag: str=None, **kwargs) -> None:
-        super(Settings, self).__init__(**kwargs)
-        self.id = None
-        self.name = None
-        self.type = None
-        self.etag = etag
-        self.kind = None
+    def __init__(self, **kwargs):
+        super(Ueba, self).__init__(**kwargs)
+        self.data_sources = kwargs.get('data_sources', None)
+        self.kind = 'Ueba'
