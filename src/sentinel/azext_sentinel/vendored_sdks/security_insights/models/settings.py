@@ -12,7 +12,7 @@ class Settings(Model):
     """The Setting.
 
     You probably want to use the sub-classes and not this class directly. Known
-    sub-classes are: EyesOn
+    sub-classes are: EyesOn, EntityAnalytics, Ueba
 
     Variables are only populated by the server, and will be ignored when
     sending a request.
@@ -47,7 +47,7 @@ class Settings(Model):
     }
 
     _subtype_map = {
-        'kind': {'EyesOn': 'EyesOn'}
+        'kind': {'EyesOn': 'EyesOn', 'EntityAnalytics': 'EntityAnalytics', 'Ueba': 'Ueba'}
     }
 
     def __init__(self, **kwargs):

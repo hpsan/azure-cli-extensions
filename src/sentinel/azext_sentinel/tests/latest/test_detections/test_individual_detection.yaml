@@ -21,6 +21,8 @@ incident_configuration:
     lookback_duration: 'PT5M'
     entities_matching_method: 'All'
     group_by_entities: ['Account']
+event_grouping_settings:
+  aggregation_kind: "AlertPerResult"
 query: |
   datatable (SomeInt:int, SomeString:string) [
     100, "Foo",

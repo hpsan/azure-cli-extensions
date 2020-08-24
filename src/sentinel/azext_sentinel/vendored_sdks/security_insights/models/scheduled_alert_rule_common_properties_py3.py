@@ -28,6 +28,9 @@ class ScheduledAlertRuleCommonProperties(Model):
     :type trigger_operator: str or ~securityinsights.models.TriggerOperator
     :param trigger_threshold: The threshold triggers this alert rule.
     :type trigger_threshold: int
+    :param event_grouping_settings: The event grouping settings.
+    :type event_grouping_settings:
+     ~securityinsights.models.EventGroupingSettings
     """
 
     _attribute_map = {
@@ -37,9 +40,10 @@ class ScheduledAlertRuleCommonProperties(Model):
         'severity': {'key': 'severity', 'type': 'str'},
         'trigger_operator': {'key': 'triggerOperator', 'type': 'TriggerOperator'},
         'trigger_threshold': {'key': 'triggerThreshold', 'type': 'int'},
+        'event_grouping_settings': {'key': 'eventGroupingSettings', 'type': 'EventGroupingSettings'},
     }
 
-    def __init__(self, *, query: str=None, query_frequency=None, query_period=None, severity=None, trigger_operator=None, trigger_threshold: int=None, **kwargs) -> None:
+    def __init__(self, *, query: str=None, query_frequency=None, query_period=None, severity=None, trigger_operator=None, trigger_threshold: int=None, event_grouping_settings=None, **kwargs) -> None:
         super(ScheduledAlertRuleCommonProperties, self).__init__(**kwargs)
         self.query = query
         self.query_frequency = query_frequency
@@ -47,3 +51,4 @@ class ScheduledAlertRuleCommonProperties(Model):
         self.severity = severity
         self.trigger_operator = trigger_operator
         self.trigger_threshold = trigger_threshold
+        self.event_grouping_settings = event_grouping_settings

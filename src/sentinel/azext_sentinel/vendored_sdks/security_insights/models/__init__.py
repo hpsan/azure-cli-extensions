@@ -119,6 +119,7 @@ try:
     from .grouping_configuration_py3 import GroupingConfiguration
     from .incident_configuration_py3 import IncidentConfiguration
     from .scheduled_alert_rule_py3 import ScheduledAlertRule
+    from .event_grouping_settings_py3 import EventGroupingSettings
     from .scheduled_alert_rule_common_properties_py3 import ScheduledAlertRuleCommonProperties
     from .scheduled_alert_rule_template_py3 import ScheduledAlertRuleTemplate
     from .security_alert_properties_confidence_reasons_item_py3 import SecurityAlertPropertiesConfidenceReasonsItem
@@ -136,8 +137,13 @@ try:
     from .ti_taxii_data_connector_py3 import TiTaxiiDataConnector
     from .ti_taxii_check_requirements_py3 import TiTaxiiCheckRequirements
     from .eyes_on_py3 import EyesOn
+    from .entity_analytics_py3 import EntityAnalytics
+    from .ueba_py3 import Ueba
     from .url_entity_py3 import UrlEntity
     from .io_tdevice_entity_py3 import IoTDeviceEntity
+    from .watchlist_item_py3 import WatchlistItem
+    from .watchlist_py3 import Watchlist
+    from .watchlist_list_py3 import WatchlistList
 except (SyntaxError, ImportError):
     from .alerts_data_type_of_data_connector_alerts import AlertsDataTypeOfDataConnectorAlerts
     from .alerts_data_type_of_data_connector import AlertsDataTypeOfDataConnector
@@ -252,6 +258,7 @@ except (SyntaxError, ImportError):
     from .grouping_configuration import GroupingConfiguration
     from .incident_configuration import IncidentConfiguration
     from .scheduled_alert_rule import ScheduledAlertRule
+    from .event_grouping_settings import EventGroupingSettings
     from .scheduled_alert_rule_common_properties import ScheduledAlertRuleCommonProperties
     from .scheduled_alert_rule_template import ScheduledAlertRuleTemplate
     from .security_alert_properties_confidence_reasons_item import SecurityAlertPropertiesConfidenceReasonsItem
@@ -269,8 +276,13 @@ except (SyntaxError, ImportError):
     from .ti_taxii_data_connector import TiTaxiiDataConnector
     from .ti_taxii_check_requirements import TiTaxiiCheckRequirements
     from .eyes_on import EyesOn
+    from .entity_analytics import EntityAnalytics
+    from .ueba import Ueba
     from .url_entity import UrlEntity
     from .io_tdevice_entity import IoTDeviceEntity
+    from .watchlist_item import WatchlistItem
+    from .watchlist import Watchlist
+    from .watchlist_list import WatchlistList
 from .security_insights_enums import (
     AlertRuleKind,
     TemplateStatus,
@@ -301,10 +313,14 @@ from .security_insights_enums import (
     RegistryValueKind,
     EntitiesMatchingMethod,
     GroupingEntityType,
+    EventGroupingAggregationKind,
     ConfidenceLevel,
     ConfidenceScoreStatus,
     KillChainIntent,
     AlertStatus,
+    SettingKind,
+    UebaDataSources,
+    Source,
 )
 
 __all__ = [
@@ -421,6 +437,7 @@ __all__ = [
     'GroupingConfiguration',
     'IncidentConfiguration',
     'ScheduledAlertRule',
+    'EventGroupingSettings',
     'ScheduledAlertRuleCommonProperties',
     'ScheduledAlertRuleTemplate',
     'SecurityAlertPropertiesConfidenceReasonsItem',
@@ -438,8 +455,13 @@ __all__ = [
     'TiTaxiiDataConnector',
     'TiTaxiiCheckRequirements',
     'EyesOn',
+    'EntityAnalytics',
+    'Ueba',
     'UrlEntity',
     'IoTDeviceEntity',
+    'WatchlistItem',
+    'Watchlist',
+    'WatchlistList',
     'AlertRuleKind',
     'TemplateStatus',
     'TriggerOperator',
@@ -469,8 +491,12 @@ __all__ = [
     'RegistryValueKind',
     'EntitiesMatchingMethod',
     'GroupingEntityType',
+    'EventGroupingAggregationKind',
     'ConfidenceLevel',
     'ConfidenceScoreStatus',
     'KillChainIntent',
     'AlertStatus',
+    'SettingKind',
+    'UebaDataSources',
+    'Source',
 ]
