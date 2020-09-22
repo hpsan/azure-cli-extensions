@@ -1,8 +1,8 @@
 import abc
 
-from typing import Optional
+from typing import Optional, Dict
 
-from azext_sentinel.custom_models import ParserParams
+from azext_sentinel.custom_models import ParserParams, PlaybookInfo
 
 from .vendored_sdks.loganalytics.mgmt.loganalytics import LogAnalyticsManagementClient
 from .vendored_sdks.loganalytics.mgmt.loganalytics.models import SavedSearch
@@ -44,7 +44,14 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_operation(self, operation_type: OperationType, operation_id: str, **kwargs):
+    def get_operation(
+        self,
+        operation_type: OperationType,
+        operation_id: str,
+        resource_group_name: Optional[str] = None,
+        workspace_name: Optional[str] = None,
+        **kwargs,
+    ):
         ...
 
     @abc.abstractmethod
@@ -69,11 +76,18 @@ class AnalyticsClient(BaseClient):
     def saved_searches(self):
         return self.client.saved_searches
 
-    def get_operation(self, operation_type: OperationType, operation_id: str, **kwargs):
+    def get_operation(
+        self,
+        operation_type: OperationType,
+        operation_id: str,
+        resource_group_name: Optional[str] = None,
+        workspace_name: Optional[str] = None,
+        **kwargs,
+    ):
         if operation_type is OperationType.SAVED_SEARCH:
             operation = self.saved_searches.get(
-                resource_group_name=self.resource_group_name,
-                workspace_name=self.workspace_name,
+                resource_group_name=resource_group_name or self.resource_group_name,
+                workspace_name=workspace_name or self.workspace_name,
                 saved_search_id=operation_id,
                 **kwargs,
             )
@@ -121,16 +135,30 @@ class AnalyticsClient(BaseClient):
         raise NotImplementedError
 
 
-class SecurityClient(BaseClient):
+class MultiClients:
     def __init__(
         self,
         security_insight_client: SecurityInsights,
         logic_management_client: LogicManagementClient,
-        **kwargs,
     ):
         self.security_insight_client = security_insight_client
         self.logic_management_client = logic_management_client
+
+
+class SecurityClient(BaseClient):
+    def __init__(
+        self,
+        multi_clients: MultiClients,
+        **kwargs,
+    ):
+        self.multi_clients = multi_clients
+        self.security_insight_client = multi_clients.security_insight_client
+        self.logic_management_client = multi_clients.logic_management_client
         super().__init__(**kwargs)
+
+    @property
+    def subscription_id(self):
+        return self.security_insight_client.config.subscription_id
 
     @property
     def alert_rules(self):
@@ -216,26 +244,6 @@ class SecurityClient(BaseClient):
             **kwargs,
         )
 
-    def is_action_updated(self, rule_id: str, action_name: str, **kwargs) -> bool:
-        existing_actions = self.list_actions_by_alert_rule(rule_id=rule_id, **kwargs).value
-        # New deployment of a resource (such as playbooks) changes its callback uri
-        if existing_actions:
-            existing_action = existing_actions[0]
-            existing_callback_uri = self.get_workflow_callback_url(
-                workflow_name=existing_action.name,
-                version_id=existing_action.version).value
-            new_action = self.get_operation(
-                operation_type=OperationType.WORKFLOW, operation_id=action_name
-            )
-            new_callback_uri = self.get_workflow_callback_url(
-                workflow_name=new_action.name, version_id=new_action.version
-            ).value
-
-            if existing_callback_uri == new_callback_uri:
-                return False
-
-        return True
-
     def delete_operation(
         self, operation_type: OperationType, operation_id: str, **kwargs
     ):
@@ -250,3 +258,31 @@ class SecurityClient(BaseClient):
         else:
             raise NotImplementedError
         return deleted_operation
+
+
+class MultiTenantSecurityClient:
+    def __init__(
+        self, primary_client: SecurityClient, aux_clients: Dict[str, MultiClients]
+    ):
+        self.primary_client = primary_client
+        self.aux_clients = aux_clients
+
+    def get_security_client(
+        self, subscription_id: str, resource_group_name: str, workspace_name: str
+    ) -> SecurityClient:
+        if subscription_id == self.primary_client.subscription_id:
+            return SecurityClient(
+                multi_clients=self.primary_client.multi_clients,
+                resource_group_name=resource_group_name,
+                workspace_name=workspace_name,
+            )
+        elif subscription_id in self.aux_clients:
+            return SecurityClient(
+                multi_clients=self.aux_clients[subscription_id],
+                resource_group_name=resource_group_name,
+                workspace_name=workspace_name,
+            )
+        raise ValueError(
+            f"Client for Subscription id: {subscription_id} is not initialized. "
+            f"Please add subscription using --aux-subscriptions flag"
+        )

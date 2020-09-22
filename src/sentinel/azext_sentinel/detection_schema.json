@@ -106,11 +106,27 @@
 			"description": "Determines whether the suppression for this detection is enabled or disabled",
 			"type": "boolean"
 		},
-		"playbook_name": {
-			"title": "Playbook Name",
-			"description": "Name of the playbook that should be triggered if the detection is triggered",
-			"type": "string",
-			"pattern": "^((?!PLACEHOLDER).)*$"
+		"playbook": {
+			"title": "Playbook",
+			"description": "Name and information of the playbook that should be triggered if the detection is triggered",
+			"type": "object",
+			"properties": {
+				"name": {
+					"title": "Playbook's Name",
+					"description": "Name of the playbook",
+					"type": "string"
+				},
+				"resource_group_name": {
+					"title": "Playbook's Resource Group Name",
+					"description": "Resource group name that this playbook is deployed in",
+					"type": "string"
+				},
+				"workspace_name": {
+					"title": "Playbook's Workspace Name",
+					"description": "Workspace name that this playbook is deployed in",
+					"type": "string"
+				}
+			}
 		},
 		"query": {
 			"title": "Detection Query",

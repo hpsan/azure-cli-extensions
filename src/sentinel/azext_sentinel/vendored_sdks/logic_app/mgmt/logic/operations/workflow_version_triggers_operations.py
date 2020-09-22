@@ -78,7 +78,6 @@ class WorkflowVersionTriggersOperations(object):
             'triggerName': self._serialize.url("trigger_name", trigger_name, 'str')
         }
         url = self._client.format_url(url, **path_format_arguments)
-
         # Construct parameters
         query_parameters = {}
         query_parameters['api-version'] = self._serialize.query("self.api_version", self.api_version, 'str')

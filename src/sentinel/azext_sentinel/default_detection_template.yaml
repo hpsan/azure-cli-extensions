@@ -39,8 +39,14 @@ suppression_duration: 'P10D'
 suppression_enabled: True
 
 # Playbook to be run automatically when your detection generates an alert.
-# example - playbook_name: 'PostAlertActions-SentinelTrigger'
-playbook_name: <PLACEHOLDER>
+# example:
+#  name: 'PostAlertActions-SentinelTrigger'
+#  resource_group_name: 'my-resource-group' (need to be set only if playbook's resource group is different from detection)
+#  workspace_name: 'my-workspace-name' (need to be set only if playbook's workspace name is different from detection
+playbook:
+  name: <PLACEHOLDER>
+  resource_group_name: <PLACEHOLDER>
+  workspace_name: <PLACEHOLDER>
 
 # Incident configuration settings when this detection is triggered
 incident_configuration:

@@ -34,8 +34,8 @@ TEST_LOCATION = "eastus"
 
 # See test_sentinel.yaml for details
 # TODO: Load recorded constants from the recorded files
-RECORDED_RESOURCE_GROUP = "test_sentinel_rg_axb4ets"
-RECORDED_WORKSPACE_NAME = "clitestae74quhgnzkywwikc"
+RECORDED_RESOURCE_GROUP = "test_sentinel_rg_3mspwrr"
+RECORDED_WORKSPACE_NAME = "clitest5cqnfjbargfgdwlue"
 
 # Azure cli command templates
 CREATE_RESOURCE_GROUP_TEMPLATE = "az group create --location {} --name {}"

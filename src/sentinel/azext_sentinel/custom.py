@@ -11,7 +11,7 @@ import yaml
 from pathlib import Path
 from typing import List, Union, Generator, Optional
 
-from azext_sentinel.custom_models import ParserParams, AlertParams
+from azext_sentinel.custom_models import ParserParams, AlertParams, PlaybookInfo
 from azure.cli.core.commands.client_factory import (
     get_mgmt_service_client,
     get_subscription_id,
@@ -24,7 +24,12 @@ from knack.util import CLIError
 from .vendored_sdks.loganalytics.mgmt.loganalytics import LogAnalyticsManagementClient
 from .vendored_sdks.loganalytics.mgmt.loganalytics.models import SavedSearch
 from ._validators import validate_name
-from .clients import SecurityClient, AnalyticsClient
+from .clients import (
+    SecurityClient,
+    AnalyticsClient,
+    MultiClients,
+    MultiTenantSecurityClient,
+)
 from .constants import (
     ETAG_KEY,
     OperationType,
@@ -48,9 +53,9 @@ logger = get_logger(__name__)
 
 def create_detections(
     cmd,
-    client: SecurityInsights,
     resource_group_name: str,
     workspace_name: str,
+    aux_subscriptions: Optional[str] = None,
     detections_directory: Optional[str] = None,
     detection_file: Optional[str] = None,
     detection_schema: Optional[str] = None,
@@ -58,24 +63,51 @@ def create_detections(
     force_link_playbook: Optional[bool] = False,
 ) -> List[AlertRule]:
     """Loads the detection config from the local file/dir, validates it and deploys it"""
-    security_insights_client = client
+    aux_subscriptions = aux_subscriptions.split(",") if aux_subscriptions else None
     logic_management_client: LogicManagementClient = get_mgmt_service_client(
-        cmd.cli_ctx, LogicManagementClient
+        cli_ctx=cmd.cli_ctx, client_or_resource_type=LogicManagementClient
     )
-
-    if enable_validation:
-        validate_detections(detections_directory, detection_file, detection_schema)
-
-    detection_files = _get_resource_files(detection_file, detections_directory)
-    sentinel_client = SecurityClient(
+    security_insights_client: SecurityInsights = get_mgmt_service_client(
+        cli_ctx=cmd.cli_ctx, client_or_resource_type=SecurityInsights
+    )
+    multi_clients = MultiClients(
         security_insight_client=security_insights_client,
         logic_management_client=logic_management_client,
+    )
+    security_client = SecurityClient(
+        multi_clients=multi_clients,
         resource_group_name=resource_group_name,
         workspace_name=workspace_name,
     )
+    aux_clients = (
+        {
+            subscription_id: MultiClients(
+                security_insight_client=get_mgmt_service_client(
+                    cli_ctx=cmd.cli_ctx,
+                    client_or_resource_type=SecurityInsights,
+                    subscription_id=subscription_id,
+                ),
+                logic_management_client=get_mgmt_service_client(
+                    cli_ctx=cmd.cli_ctx,
+                    client_or_resource_type=LogicManagementClient,
+                    subscription_id=subscription_id,
+                ),
+            )
+            for subscription_id in aux_subscriptions
+        }
+        if aux_subscriptions
+        else {}
+    )
+    multi_tenant_client = MultiTenantSecurityClient(
+        primary_client=security_client, aux_clients=aux_clients
+    )
+    if enable_validation:
+        validate_detections(detections_directory, detection_file, detection_schema)
+    detection_files = _get_resource_files(detection_file, detections_directory)
+
     return [
         _create_or_update_detection(
-            security_client=sentinel_client,
+            multi_tenant_client=multi_tenant_client,
             detection_file=detection_file,
             force_link_playbook=force_link_playbook,
         )
@@ -196,7 +228,9 @@ def generate_resource(
             with_documentation = prompt_y_n(
                 f"Would you like to create a documentation file for your {resource_type.value}?"
             )
-    resources_directory: str = resources_directory if resources_directory else os.getcwd()
+    resources_directory: str = (
+        resources_directory if resources_directory else os.getcwd()
+    )
     resource_file_name: str = name + ".yaml"
     resource_template = _resolve_config_file(resource_type, ResourceConfig.TEMPLATE)
     resource_config: str = resource_template.read_text().format(
@@ -313,11 +347,15 @@ def _get_resource_files(
 
 
 def _create_or_update_detection(
-    security_client: SecurityClient, detection_file: Path, force_link_playbook: bool
+    multi_tenant_client: MultiTenantSecurityClient,
+    detection_file: Path,
+    force_link_playbook: bool,
 ) -> AlertRule:
     """Loads the detection config from the local file/dir and deploys it"""
+    security_client = multi_tenant_client.primary_client
     alert_dict = yaml.safe_load(detection_file.read_text())
     alert_params = AlertParams(**alert_dict)
+    playbook_info = alert_params.playbook_info
     # Fetch the existing rule to update if it already exists
     try:
         existing_rule = security_client.get_operation(
@@ -342,16 +380,15 @@ def _create_or_update_detection(
         raise azCloudError
 
     # Link the playbook if it is configured
-    if alert_params.playbook_name:
-        if security_client.is_action_updated(
-            rule_id=alert_params.rule_id, action_name=alert_params.playbook_name
-        ) or force_link_playbook:
-            _link_playbook(
-                security_client=security_client,
-                rule_id=alert_params.rule_id,
-                playbook_name=alert_params.playbook_name,
-            )
-    else:
+    # Caveat: When playbooks get deployed, their callback url get changed. Thus, it is necessary to have
+    # force_link_playbook flag set for CI/CD pipeline deployments
+    if playbook_info and force_link_playbook:
+        _link_playbook(
+            multi_tenant_client=multi_tenant_client,
+            rule_id=alert_params.rule_id,
+            playbook_info=playbook_info,
+        )
+    elif not playbook_info:
         _unlink_all_playbooks(
             security_client=security_client, rule_id=alert_params.rule_id
         )
@@ -359,24 +396,41 @@ def _create_or_update_detection(
     return created_alert
 
 
-def _link_playbook(
-    security_client: SecurityClient, rule_id: str, playbook_name: str
-) -> ActionResponse:
-
-    _unlink_all_playbooks(security_client=security_client, rule_id=rule_id)
+def _get_playbook_action_request(
+    multi_tenant_client: MultiTenantSecurityClient, playbook_info: PlaybookInfo
+) -> str:
+    security_client = multi_tenant_client.get_security_client(
+        subscription_id=playbook_info.subscription_id,
+        resource_group_name=playbook_info.resource_group_name,
+        workspace_name=playbook_info.workspace_name,
+    )
     playbook = security_client.get_operation(
-        operation_type=OperationType.WORKFLOW, operation_id=playbook_name
+        operation_type=OperationType.WORKFLOW,
+        operation_id=playbook_info.name,
     )
     workflow_callback_url = security_client.get_workflow_callback_url(
-        workflow_name=playbook.name, version_id=playbook.version
+        workflow_name=playbook.name,
+        version_id=playbook.version,
     )
     trigger_uri = workflow_callback_url.value
-    action_request = ActionRequest(
-        logic_app_resource_id=playbook.id, trigger_uri=trigger_uri,
+
+    return ActionRequest(logic_app_resource_id=playbook.id, trigger_uri=trigger_uri)
+
+
+def _link_playbook(
+    multi_tenant_client: MultiTenantSecurityClient,
+    rule_id: str,
+    playbook_info: PlaybookInfo,
+) -> ActionResponse:
+
+    security_client = multi_tenant_client.primary_client
+    _unlink_all_playbooks(security_client=security_client, rule_id=rule_id)
+    action_request = _get_playbook_action_request(
+        multi_tenant_client=multi_tenant_client, playbook_info=playbook_info
     )
     linked_playbook = security_client.create_or_update_operation(
         operation_type=OperationType.ACTION,
-        operation_id=playbook_name,
+        operation_id=playbook_info.name,
         operation=action_request,
         rule_id=rule_id,
     )
@@ -442,8 +496,8 @@ def _create_documentation(
     documentation_template: Path, detection_name: str, documentation_location: Path
 ) -> None:
     documentation_template_content: str = documentation_template.read_text()
-    documentation_content: str = "# {} \n \n".format(
-        detection_name
-    ) + documentation_template_content
+    documentation_content: str = (
+        "# {} \n \n".format(detection_name) + documentation_template_content
+    )
     documentation_file: Path = documentation_location / (detection_name + ".md")
     documentation_file.write_text(documentation_content)
