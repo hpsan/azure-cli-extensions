@@ -45,6 +45,7 @@ suppression_enabled: True
 #  workspace_name: 'my-workspace-name' (need to be set only if playbook's workspace name is different from detection
 playbook:
   name: <PLACEHOLDER>
+  subscription_id: <PLACEHOLDER>
   resource_group_name: <PLACEHOLDER>
   workspace_name: <PLACEHOLDER>
 

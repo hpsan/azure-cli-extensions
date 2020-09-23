@@ -19,9 +19,9 @@ class PlaybookInfo:
     def __init__(
             self,
             name: str,
-            subscription_id: Optional[str] = None,
-            resource_group_name: Optional[str] = None,
-            workspace_name: Optional[str] = None
+            subscription_id: str,
+            resource_group_name: str,
+            workspace_name: str
     ):
         self.name = name
         self.subscription_id = subscription_id

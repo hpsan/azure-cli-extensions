@@ -116,6 +116,11 @@
 					"description": "Name of the playbook",
 					"type": "string"
 				},
+				"subscription_id": {
+					"title": "Playbook's subscription id",
+					"description": "Subscription ID that this playbook is deployed in",
+					"type": "string"
+				},
 				"resource_group_name": {
 					"title": "Playbook's Resource Group Name",
 					"description": "Resource group name that this playbook is deployed in",
