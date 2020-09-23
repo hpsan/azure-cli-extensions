@@ -48,8 +48,6 @@ class BaseClient(abc.ABC):
         self,
         operation_type: OperationType,
         operation_id: str,
-        resource_group_name: Optional[str] = None,
-        workspace_name: Optional[str] = None,
         **kwargs,
     ):
         ...
@@ -80,14 +78,12 @@ class AnalyticsClient(BaseClient):
         self,
         operation_type: OperationType,
         operation_id: str,
-        resource_group_name: Optional[str] = None,
-        workspace_name: Optional[str] = None,
         **kwargs,
     ):
         if operation_type is OperationType.SAVED_SEARCH:
             operation = self.saved_searches.get(
-                resource_group_name=resource_group_name or self.resource_group_name,
-                workspace_name=workspace_name or self.workspace_name,
+                resource_group_name=self.resource_group_name,
+                workspace_name=self.workspace_name,
                 saved_search_id=operation_id,
                 **kwargs,
             )
