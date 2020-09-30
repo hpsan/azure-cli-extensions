@@ -11,21 +11,21 @@ from msrest.serialization import Model
 class SettingsKind(Model):
     """Describes an Azure resource with kind.
 
-    Variables are only populated by the server, and will be ignored when
-    sending a request.
-
     All required parameters must be populated in order to send to Azure.
 
-    :ivar kind: Required. The kind of the setting. Default value: "EyesOn" .
-    :vartype kind: str
+    :param kind: Required. The kind of the setting. Possible values include:
+     'EyesOn', 'EntityAnalytics', 'Ueba'
+    :type kind: str or ~securityinsights.models.SettingKind
     """
 
     _validation = {
-        'kind': {'required': True, 'constant': True},
+        'kind': {'required': True},
     }
 
     _attribute_map = {
         'kind': {'key': 'kind', 'type': 'str'},
     }
 
-    kind = "EyesOn"
+    def __init__(self, **kwargs):
+        super(SettingsKind, self).__init__(**kwargs)
+        self.kind = kwargs.get('kind', None)

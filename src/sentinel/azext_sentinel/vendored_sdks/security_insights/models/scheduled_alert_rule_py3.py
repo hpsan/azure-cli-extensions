@@ -43,6 +43,9 @@ class ScheduledAlertRule(AlertRule):
     :type trigger_operator: str or ~securityinsights.models.TriggerOperator
     :param trigger_threshold: The threshold triggers this alert rule.
     :type trigger_threshold: int
+    :param event_grouping_settings: The event grouping settings.
+    :type event_grouping_settings:
+     ~securityinsights.models.EventGroupingSettings
     :param alert_rule_template_name: The Name of the alert rule template used
      to create this rule.
     :type alert_rule_template_name: str
@@ -95,6 +98,7 @@ class ScheduledAlertRule(AlertRule):
         'severity': {'key': 'properties.severity', 'type': 'str'},
         'trigger_operator': {'key': 'properties.triggerOperator', 'type': 'TriggerOperator'},
         'trigger_threshold': {'key': 'properties.triggerThreshold', 'type': 'int'},
+        'event_grouping_settings': {'key': 'properties.eventGroupingSettings', 'type': 'EventGroupingSettings'},
         'alert_rule_template_name': {'key': 'properties.alertRuleTemplateName', 'type': 'str'},
         'description': {'key': 'properties.description', 'type': 'str'},
         'display_name': {'key': 'properties.displayName', 'type': 'str'},
@@ -106,7 +110,7 @@ class ScheduledAlertRule(AlertRule):
         'incident_configuration': {'key': 'properties.incidentConfiguration', 'type': 'IncidentConfiguration'},
     }
 
-    def __init__(self, *, display_name: str, enabled: bool, suppression_duration, suppression_enabled: bool, etag: str=None, query: str=None, query_frequency=None, query_period=None, severity=None, trigger_operator=None, trigger_threshold: int=None, alert_rule_template_name: str=None, description: str=None, tactics=None, incident_configuration=None, **kwargs) -> None:
+    def __init__(self, *, display_name: str, enabled: bool, suppression_duration, suppression_enabled: bool, etag: str=None, query: str=None, query_frequency=None, query_period=None, severity=None, trigger_operator=None, trigger_threshold: int=None, event_grouping_settings=None, alert_rule_template_name: str=None, description: str=None, tactics=None, incident_configuration=None, **kwargs) -> None:
         super(ScheduledAlertRule, self).__init__(etag=etag, **kwargs)
         self.query = query
         self.query_frequency = query_frequency
@@ -114,6 +118,7 @@ class ScheduledAlertRule(AlertRule):
         self.severity = severity
         self.trigger_operator = trigger_operator
         self.trigger_threshold = trigger_threshold
+        self.event_grouping_settings = event_grouping_settings
         self.alert_rule_template_name = alert_rule_template_name
         self.description = description
         self.display_name = display_name

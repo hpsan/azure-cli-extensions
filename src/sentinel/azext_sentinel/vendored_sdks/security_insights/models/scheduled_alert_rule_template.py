@@ -59,6 +59,9 @@ class ScheduledAlertRuleTemplate(AlertRuleTemplate):
     :param trigger_threshold: Required. The threshold triggers this alert
      rule.
     :type trigger_threshold: int
+    :param event_grouping_settings: The event grouping settings.
+    :type event_grouping_settings:
+     ~securityinsights.models.EventGroupingSettings
     :param tactics: The tactics of the alert rule template
     :type tactics: list[str or ~securityinsights.models.AttackTactic]
     """
@@ -98,6 +101,7 @@ class ScheduledAlertRuleTemplate(AlertRuleTemplate):
         'severity': {'key': 'properties.severity', 'type': 'str'},
         'trigger_operator': {'key': 'properties.triggerOperator', 'type': 'TriggerOperator'},
         'trigger_threshold': {'key': 'properties.triggerThreshold', 'type': 'int'},
+        'event_grouping_settings': {'key': 'properties.eventGroupingSettings', 'type': 'EventGroupingSettings'},
         'tactics': {'key': 'properties.tactics', 'type': '[str]'},
     }
 
@@ -115,5 +119,6 @@ class ScheduledAlertRuleTemplate(AlertRuleTemplate):
         self.severity = kwargs.get('severity', None)
         self.trigger_operator = kwargs.get('trigger_operator', None)
         self.trigger_threshold = kwargs.get('trigger_threshold', None)
+        self.event_grouping_settings = kwargs.get('event_grouping_settings', None)
         self.tactics = kwargs.get('tactics', None)
         self.kind = 'Scheduled'

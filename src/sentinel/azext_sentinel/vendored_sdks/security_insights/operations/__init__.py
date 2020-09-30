@@ -28,6 +28,7 @@ from .entity_queries_operations import EntityQueriesOperations
 from .incidents_operations import IncidentsOperations
 from .incident_comments_operations import IncidentCommentsOperations
 from .incident_relations_operations import IncidentRelationsOperations
+from .watchlists_operations import WatchlistsOperations
 
 __all__ = [
     'Operations',
@@ -53,4 +54,5 @@ __all__ = [
     'IncidentsOperations',
     'IncidentCommentsOperations',
     'IncidentRelationsOperations',
+    'WatchlistsOperations',
 ]

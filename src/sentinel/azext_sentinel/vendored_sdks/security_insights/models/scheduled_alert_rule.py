@@ -43,6 +43,9 @@ class ScheduledAlertRule(AlertRule):
     :type trigger_operator: str or ~securityinsights.models.TriggerOperator
     :param trigger_threshold: The threshold triggers this alert rule.
     :type trigger_threshold: int
+    :param event_grouping_settings: The event grouping settings.
+    :type event_grouping_settings:
+     ~securityinsights.models.EventGroupingSettings
     :param alert_rule_template_name: The Name of the alert rule template used
      to create this rule.
     :type alert_rule_template_name: str
@@ -95,6 +98,7 @@ class ScheduledAlertRule(AlertRule):
         'severity': {'key': 'properties.severity', 'type': 'str'},
         'trigger_operator': {'key': 'properties.triggerOperator', 'type': 'TriggerOperator'},
         'trigger_threshold': {'key': 'properties.triggerThreshold', 'type': 'int'},
+        'event_grouping_settings': {'key': 'properties.eventGroupingSettings', 'type': 'EventGroupingSettings'},
         'alert_rule_template_name': {'key': 'properties.alertRuleTemplateName', 'type': 'str'},
         'description': {'key': 'properties.description', 'type': 'str'},
         'display_name': {'key': 'properties.displayName', 'type': 'str'},
@@ -114,6 +118,7 @@ class ScheduledAlertRule(AlertRule):
         self.severity = kwargs.get('severity', None)
         self.trigger_operator = kwargs.get('trigger_operator', None)
         self.trigger_threshold = kwargs.get('trigger_threshold', None)
+        self.event_grouping_settings = kwargs.get('event_grouping_settings', None)
         self.alert_rule_template_name = kwargs.get('alert_rule_template_name', None)
         self.description = kwargs.get('description', None)
         self.display_name = kwargs.get('display_name', None)
