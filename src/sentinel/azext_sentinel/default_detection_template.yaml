@@ -75,6 +75,14 @@ incident_configuration:
     # Options: Account, Host, Ip, Url
     group_by_entities:
       - <PLACEHOLDER>
+      -
+# Configure how rule query results are grouped into alerts
+event_grouping_settings:
+  # Group all events into a single alert (SingleAlert) or trigger an alert for each event (AlertPerResult)
+  # Options: SingleAlert or AlertPerResult
+  # Caveat: A single analytics rule can generate up to 20 alerts. If you choose “AlertPerResult” and the rule query returns more than 20 events,
+  # the rule will generate 20 alerts, and the twentieth alert will include a summary of all the events.
+  aggregation_kind: <PLACEHOLDER>
 
 # The KQL query that creates alerts for this detection
 # Read aka.ms/kql to learn how to write KQL queries

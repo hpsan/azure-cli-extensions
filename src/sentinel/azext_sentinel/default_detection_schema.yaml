@@ -175,8 +175,18 @@ properties:
         type: array
         items:
           type: string
-
-
+  event_grouping_settings:
+    title: Event Grouping Settings
+    description: Configure how rule query results are grouped into alerts
+    type: object
+    properties:
+      aggregation_kind:
+        title: Aggregation Kind
+        description: Group all events into a single alert (SingleAlert) or trigger an alert for each event (AlertPerResult)
+        type: string
+        enum:
+          - SingleAlert
+          - AlertPerResult
 required:
   - id
   - query_frequency

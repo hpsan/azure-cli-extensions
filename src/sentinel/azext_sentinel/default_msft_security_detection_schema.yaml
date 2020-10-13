@@ -1,0 +1,62 @@
+schema: "http://json-schema.org/draft-07/schema#"
+title: Azure Sentinel Microsoft Security Detection
+description: Schema to codify Azure Sentinel Microsoft Security detections. Based on aka.ms/sentinelrestapi
+type: object
+properties:
+  id:
+    title: Detection ID
+    description: Unique ID specific to a detection
+    type: string
+    examples:
+      - 5b8d86f5-26a8-49b8-ba37-b35286e485ef
+  description:
+    title: Description
+    description: The description of this detection
+    type: string
+    pattern: "^((?!PLACEHOLDER).)*$"
+  display_name:
+    title: Display Name
+    description: The display name for this detection
+    type: string
+    pattern: "^((?!PLACEHOLDER).)*$"
+  enabled:
+    title: Enable Detection
+    description: Determines whether this detection is enabled or disabled
+    type: boolean
+  display_name_filter:
+    title: Display Name Filter
+    description: The alerts' display names on which the cases will be generated
+    type: array
+    items:
+      type: string
+  display_name_exclude_filter:
+    title: Display Name Exclude Filter
+    description: The alerts' display names on which the cases will NOT be generated
+    type: array
+    items:
+      type: string
+  product_filter:
+    title: Product Filter
+    description: Microsoft Security Product Name associated with this detection
+    type: string
+    enum:
+      - Microsoft Cloud App Security
+      - Azure Security Center
+      - Azure Advanced Threat Protection
+      - Azure Active Directory Identity Protection
+      - Azure Security Center for IoT
+  severities_filter:
+    title: Sevirities Filter
+    description: List of severities filter for this detection
+    type: string
+    enum:
+      - High
+      - Medium
+      - Low
+      - Informational
+required:
+  - id
+  - description
+  - display_name
+  - enabled
+  - product_filter

@@ -3,8 +3,10 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 import os
+import re
 import tempfile
 from pathlib import Path
+from typing import Tuple
 
 import yaml
 from azure.cli.testsdk import ScenarioTest, create_random_name
@@ -12,47 +14,68 @@ from knack.util import CLIError
 
 from azext_sentinel.constants import DISPLAY_NAME_KEY
 
-ID_KEY = "id"
-NAME_KEY = "name"
-VALUE_KEY = "value"
+ID_KEY = 'id'
+NAME_KEY = 'name'
+VALUE_KEY = 'value'
 
-TEST_RESOURCE_GROUP_PREFIX = "test_sentinel_rg_"
-DEFAULT_RESOURCE_PROVIDER = "Microsoft.OperationalInsights"
+TEST_RESOURCE_GROUP_PREFIX = 'test_sentinel_rg_'
+DEFAULT_RESOURCE_PROVIDER = 'Microsoft.OperationalInsights'
 
 TEST_ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-TEST_WORKSPACE_TEMPLATE = os.path.join(TEST_ROOT_PATH, "deploylaworkspacetemplate.json")
+TEST_WORKSPACE_TEMPLATE = os.path.join(TEST_ROOT_PATH, 'deploylaworkspacetemplate.json')
 TEST_VALID_DETECTIONS_FOLDER = os.path.join(
-    TEST_ROOT_PATH, "test_detections/valid_detections"
+    TEST_ROOT_PATH, 'test_detections/valid_detections'
 )
 TEST_INVALID_DETECTIONS_FOLDER = os.path.join(
-    TEST_ROOT_PATH, "test_detections/invalid_detections"
+    TEST_ROOT_PATH, 'test_detections/invalid_detections'
 )
 TEST_INDIVIDUAL_DETECTION_FILE = os.path.join(
-    TEST_ROOT_PATH, "test_detections/test_individual_detection.yaml"
+    TEST_ROOT_PATH, 'test_detections/test_individual_detection.yaml'
 )
-TEST_LOCATION = "eastus"
-
-# See test_sentinel.yaml for details
-# TODO: Load recorded constants from the recorded files
-RECORDED_RESOURCE_GROUP = "test_sentinel_rg_3mspwrr"
-RECORDED_WORKSPACE_NAME = "clitest5cqnfjbargfgdwlue"
+TEST_LOCATION = 'eastus'
+RECORDING_PATH = os.path.join(
+    TEST_ROOT_PATH, 'recordings'
+)
+RECORDING_DETECTION_CREATION_FILE = os.path.join(
+    RECORDING_PATH, 'test_sentinel_detection_create.yaml'
+)
 
 # Azure cli command templates
-CREATE_RESOURCE_GROUP_TEMPLATE = "az group create --location {} --name {}"
-CREATE_WORKSPACE_TEMPLATE = "az deployment group create -g {} --name LAWorkspace --template-file {} --parameters workspaceName={}"
-DELETE_RESOURCE_GROUP_TEMPLATE = "az group delete --name {} --yes --no-wait"
-DELETE_WORKSPACE_TEMPLATE = "az deployment group delete -g {} --name {} --no-wait"
+CREATE_RESOURCE_GROUP_TEMPLATE = 'az group create --location {} --name {}'
+CREATE_WORKSPACE_TEMPLATE = 'az deployment group create -g {} --name LAWorkspace --template-file {} --parameters workspaceName={}'
+DELETE_RESOURCE_GROUP_TEMPLATE = 'az group delete --name {} --yes --no-wait'
+DELETE_WORKSPACE_TEMPLATE = 'az deployment group delete -g {} --name {} --no-wait'
 
 # Sentinel extension detection command templates
-CREATE_CMD_TEMPLATE_FROM_FILE = "az sentinel detection create -g {} -n {} -f {}"
-CREATE_CMD_TEMPLATE_FROM_DIR = "az sentinel detection create -g {} -n {} -d {}"
-GENERATE_CMD_TEMPLATE = "az sentinel detection generate -n {} -d {} --skip-interactive"
-VALIDATE_CMD_TEMPLATE = "az sentinel detection validate -d {}"
-SHOW_CMD_TEMPLATE = "az sentinel detection show -g {} -n {} --rule-id {} --operational-insights-resource-provider {}"
-DELETE_CMD_TEMPLATE = "az sentinel detection delete -g {} -n {} --operational-insights-resource-provider {} --rule-id {}"
-LIST_CMD_TEMPLATE = (
-    "az sentinel detection list -g {} -n {} --operational-insights-resource-provider {}"
+CREATE_CMD_TEMPLATE_FROM_FILE = (
+    'az sentinel create --resource-type scheduled_detection -g {} -n {} -f {}'
 )
+CREATE_CMD_TEMPLATE_FROM_DIR = (
+    'az sentinel create -t scheduled_detection -g {} -n {} -d {}'
+)
+GENERATE_CMD_TEMPLATE = (
+    'az sentinel generate -t scheduled_detection -n {} -d {} --skip-interactive'
+)
+VALIDATE_CMD_TEMPLATE = 'az sentinel validate -t scheduled_detection -d {}'
+SHOW_CMD_TEMPLATE = 'az sentinel show -g {} -n {} --rule-id {} --operational-insights-resource-provider {}'
+DELETE_CMD_TEMPLATE = 'az sentinel delete  -g {} -n {} --operational-insights-resource-provider {} --rule-id {}'
+LIST_CMD_TEMPLATE = (
+    'az sentinel list -g {} -n {} --operational-insights-resource-provider {}'
+)
+
+# TODO: Refactor tests, add more, make it more readable and easy to debug
+
+
+def resolve_recorded_params() -> Tuple[str, str]:
+    recording_dict = yaml.safe_load(Path(RECORDING_DETECTION_CREATION_FILE).read_text())
+    interaction_list = recording_dict.get("interactions")
+    for interaction in interaction_list:
+        request = interaction.get("request")
+        if request.get("method") == "GET":
+            recording_uri = request.get("uri")
+            recorded_resource_group = re.findall(r'resourceGroups/(.*?)/', recording_uri)[0]
+            recorded_workspace_name = re.findall(r'workspaces/(.*?)/', recording_uri)[0]
+            return recorded_resource_group, recorded_workspace_name
 
 
 class SentinelScenarioTest(ScenarioTest):
@@ -62,7 +85,7 @@ class SentinelScenarioTest(ScenarioTest):
         )
         self.test_folder_detections = [
             yaml.safe_load(file.read_text())
-            for file in Path(TEST_VALID_DETECTIONS_FOLDER).glob("**/*.yaml")
+            for file in Path(TEST_VALID_DETECTIONS_FOLDER).glob('**/*.yaml')
         ]
         self.resource_provider = DEFAULT_RESOURCE_PROVIDER
         if self.in_recording:
@@ -82,8 +105,7 @@ class SentinelScenarioTest(ScenarioTest):
                 )
             )
         else:
-            self.resource_group_name = RECORDED_RESOURCE_GROUP
-            self.workspace_name = RECORDED_WORKSPACE_NAME
+            self.resource_group_name, self.workspace_name = resolve_recorded_params()
         super(ScenarioTest, self).setUp()
 
     def tearDown(self):
@@ -135,7 +157,7 @@ class SentinelScenarioTest(ScenarioTest):
         try:
             self.cmd(VALIDATE_CMD_TEMPLATE.format(TEST_VALID_DETECTIONS_FOLDER))
         except CLIError:
-            raise AssertionError("Validation failed unexpectedly")
+            raise AssertionError('Validation failed unexpectedly')
         with self.assertRaises(CLIError):
             self.cmd(VALIDATE_CMD_TEMPLATE.format(TEST_INVALID_DETECTIONS_FOLDER))
         self.assertEqual(True, True)
@@ -149,10 +171,14 @@ class SentinelScenarioTest(ScenarioTest):
                 )
             )
             detection_file = (
-                Path(generated_detections_folder) / detection_name / (detection_name + ".yaml")
+                Path(generated_detections_folder)
+                / detection_name
+                / (detection_name + '.yaml')
             )
             detection_documentation = (
-                Path(generated_detections_folder) / detection_name / (detection_name + ".md")
+                Path(generated_detections_folder)
+                / detection_name
+                / (detection_name + '.md')
             )
             generated_detection = yaml.safe_load(detection_file.read_text())
             self.assertEquals(generated_detection[DISPLAY_NAME_KEY], detection_name)
