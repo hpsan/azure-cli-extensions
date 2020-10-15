@@ -18,7 +18,7 @@ helps[
     "sentinel create"
 ] = """
     type: command
-    short-summary: Create a Sentinel.
+    short-summary: Create a Sentinel resource.
 """
 
 helps[
@@ -32,7 +32,7 @@ helps[
     "sentinel delete"
 ] = """
     type: command
-    short-summary: Delete a Sentinel.
+    short-summary: Delete a Sentinel resource.
 """
 
 helps[
@@ -46,5 +46,5 @@ helps[
     "sentinel update"
 ] = """
     type: command
-    short-summary: Update a Sentinel.
+    short-summary: Update a Sentinel resource.
 """

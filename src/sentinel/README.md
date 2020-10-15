@@ -38,26 +38,25 @@ In order to install from source
 
 ## CLI Commands
 ```bash
-(azuredev) [master !x+] ~/Workspace/github/azure-cli-extensions/src/sentinel  $ az sentinel detection -h
-
+(azuredev) [master !x+] ~/Workspace/github/azure-cli-extensions/src/sentinel  $ az sentinel -h
+                                                                                
 Group
-    az sentinel detection
-        Command group 'sentinel' is in preview. It may be changed/removed in a future
-        release.
+    az sentinel : Commands to manage Sentinels.
+        This command group is in preview. It may be changed/removed in a future release.
 Commands:
-    create   : Loads the detection config from the local file/dir, validates it and deploys it.
-    delete   : Delete the alert rule.
-    generate : Creates a scaffolding for the detection based on the configured template.
-    list     : Gets all alert rules.
-    show     : Gets the alert rule.
-    update   : Loads the detection config from the local file/dir, validates it and deploys it.
-    validate : Validates the detections against its configured JSON schema.
+    create   : Create a Sentinel resource.
+    delete   : Delete a Sentinel resource.
+    generate : Creates a scaffolding for the given resource based on the configured template.
+    list     : List Sentinels.
+    show     : Show details of a Sentinel.
+    update   : Update a Sentinel resource.
+    validate : Validates the given resources against its configured JSON schema.
 ```
-## Developing a new Detection
+## Developing a new Scheduled Detection
 We'll be using the https://github.com/hpsan/sample-sentinel-setup to illustrate how to use the CLI commands
 ### Step 1: Create the scaffold
 ```bash
-(azuredev) [master] ~/Workspace/sample-sentinel-setup/Detections  $ az sentinel detection generate
+(azuredev) [master] ~/Workspace/sample-sentinel-setup/Detections  $ az sentinel generate -t scheduled_detection
 Command group 'sentinel' is in preview. It may be changed/removed in a future release.
 Name your detection(alphanumeric without spaces): NewDetection
 (azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $ tree NewDetection/
@@ -83,14 +82,14 @@ to https://joshuaavalon.io/intellisense-json-yaml-vs-code
 ### Step 3: Validate your detection configuration
 Run the validate command to check your detection configuration
 ```bash
-(azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $ az sentinel detection validate -d .
+(azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $ az sentinel validate -t scheduled_detection -d .
 Command group 'sentinel' is in preview. It may be changed/removed in a future release.
 '<PLACEHOLDER>' is not one of ['InitialAccess', 'Execution', 'Persistence', 'PrivilegeEscalation', 'DefenseEvasion', 'CredentialAccess', 'Discovery', 'LateralMovement', 'Collection', 'Exfiltration', 'CommandAndControl', 'Impact']
 (azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $
 ```
 Fix your detection configuration until the validation passes
 ```bash
-(azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $ az sentinel detection validate -d .
+(azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $ az sentinel validate -t scheduled_detection -d .
 Command group 'sentinel' is in preview. It may be changed/removed in a future release.
 (azuredev) [master ?] ~/Workspace/sample-sentinel-setup/Detections  $
 ```
