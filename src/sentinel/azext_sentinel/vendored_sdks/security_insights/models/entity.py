@@ -14,8 +14,8 @@ class Entity(Model):
     You probably want to use the sub-classes and not this class directly. Known
     sub-classes are: AccountEntity, AzureResourceEntity,
     CloudApplicationEntity, DnsEntity, FileEntity, FileHashEntity, HostEntity,
-    IpEntity, MalwareEntity, ProcessEntity, RegistryKeyEntity,
-    RegistryValueEntity, SecurityAlert, SecurityGroupEntity, UrlEntity,
+    HuntingBookmark, SecurityAlert, IpEntity, MalwareEntity, ProcessEntity,
+    RegistryKeyEntity, RegistryValueEntity, SecurityGroupEntity, UrlEntity,
     IoTDeviceEntity
 
     Variables are only populated by the server, and will be ignored when
@@ -48,7 +48,7 @@ class Entity(Model):
     }
 
     _subtype_map = {
-        'kind': {'Account': 'AccountEntity', 'AzureResource': 'AzureResourceEntity', 'CloudApplication': 'CloudApplicationEntity', 'DnsResolution': 'DnsEntity', 'File': 'FileEntity', 'FileHash': 'FileHashEntity', 'Host': 'HostEntity', 'Ip': 'IpEntity', 'Malware': 'MalwareEntity', 'Process': 'ProcessEntity', 'RegistryKey': 'RegistryKeyEntity', 'RegistryValue': 'RegistryValueEntity', 'SecurityAlert': 'SecurityAlert', 'SecurityGroup': 'SecurityGroupEntity', 'Url': 'UrlEntity', 'IoTDevice': 'IoTDeviceEntity'}
+        'kind': {'Account': 'AccountEntity', 'AzureResource': 'AzureResourceEntity', 'CloudApplication': 'CloudApplicationEntity', 'DnsResolution': 'DnsEntity', 'File': 'FileEntity', 'FileHash': 'FileHashEntity', 'Host': 'HostEntity', 'Bookmark': 'HuntingBookmark', 'SecurityAlert': 'SecurityAlert', 'Ip': 'IpEntity', 'Malware': 'MalwareEntity', 'Process': 'ProcessEntity', 'RegistryKey': 'RegistryKeyEntity', 'RegistryValue': 'RegistryValueEntity', 'SecurityGroup': 'SecurityGroupEntity', 'Url': 'UrlEntity', 'IoTDevice': 'IoTDeviceEntity'}
     }
 
     def __init__(self, **kwargs):

@@ -14,8 +14,8 @@ class DataConnectorsCheckRequirements(Model):
     You probably want to use the sub-classes and not this class directly. Known
     sub-classes are: AADCheckRequirements, AATPCheckRequirements,
     ASCCheckRequirements, AwsCloudTrailCheckRequirements,
-    MCASCheckRequirements, MDATPCheckRequirements, TICheckRequirements,
-    TiTaxiiCheckRequirements
+    MCASCheckRequirements, MDATPCheckRequirements, OfficeATPCheckRequirements,
+    TICheckRequirements, TiTaxiiCheckRequirements
 
     All required parameters must be populated in order to send to Azure.
 
@@ -32,7 +32,7 @@ class DataConnectorsCheckRequirements(Model):
     }
 
     _subtype_map = {
-        'kind': {'AzureActiveDirectory': 'AADCheckRequirements', 'AzureAdvancedThreatProtection': 'AATPCheckRequirements', 'AzureSecurityCenter': 'ASCCheckRequirements', 'AmazonWebServicesCloudTrail': 'AwsCloudTrailCheckRequirements', 'MicrosoftCloudAppSecurity': 'MCASCheckRequirements', 'MicrosoftDefenderAdvancedThreatProtection': 'MDATPCheckRequirements', 'ThreatIntelligence': 'TICheckRequirements', 'ThreatIntelligenceTaxii': 'TiTaxiiCheckRequirements'}
+        'kind': {'AzureActiveDirectory': 'AADCheckRequirements', 'AzureAdvancedThreatProtection': 'AATPCheckRequirements', 'AzureSecurityCenter': 'ASCCheckRequirements', 'AmazonWebServicesCloudTrail': 'AwsCloudTrailCheckRequirements', 'MicrosoftCloudAppSecurity': 'MCASCheckRequirements', 'MicrosoftDefenderAdvancedThreatProtection': 'MDATPCheckRequirements', 'OfficeATP': 'OfficeATPCheckRequirements', 'ThreatIntelligence': 'TICheckRequirements', 'ThreatIntelligenceTaxii': 'TiTaxiiCheckRequirements'}
     }
 
     def __init__(self, **kwargs) -> None:

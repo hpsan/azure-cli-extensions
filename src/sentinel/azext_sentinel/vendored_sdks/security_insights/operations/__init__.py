@@ -29,6 +29,11 @@ from .incidents_operations import IncidentsOperations
 from .incident_comments_operations import IncidentCommentsOperations
 from .incident_relations_operations import IncidentRelationsOperations
 from .watchlists_operations import WatchlistsOperations
+from .threat_intelligence_indicators_operations import ThreatIntelligenceIndicatorsOperations
+from .threat_intelligence_indicator_operations import ThreatIntelligenceIndicatorOperations
+from .threat_intelligence_indicator_upsert_operations import ThreatIntelligenceIndicatorUpsertOperations
+from .threat_intelligence_indicators_list_operations import ThreatIntelligenceIndicatorsListOperations
+from .threat_intelligence_indicator_metrics_operations import ThreatIntelligenceIndicatorMetricsOperations
 
 __all__ = [
     'Operations',
@@ -55,4 +60,9 @@ __all__ = [
     'IncidentCommentsOperations',
     'IncidentRelationsOperations',
     'WatchlistsOperations',
+    'ThreatIntelligenceIndicatorsOperations',
+    'ThreatIntelligenceIndicatorOperations',
+    'ThreatIntelligenceIndicatorUpsertOperations',
+    'ThreatIntelligenceIndicatorsListOperations',
+    'ThreatIntelligenceIndicatorMetricsOperations',
 ]

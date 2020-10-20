@@ -17,14 +17,18 @@ class OfficeDataConnectorDataTypes(Model):
     :param share_point: SharePoint data type connection.
     :type share_point:
      ~securityinsights.models.OfficeDataConnectorDataTypesSharePoint
+    :param teams: Teams data type connection.
+    :type teams: ~securityinsights.models.OfficeDataConnectorDataTypesTeams
     """
 
     _attribute_map = {
         'exchange': {'key': 'exchange', 'type': 'OfficeDataConnectorDataTypesExchange'},
         'share_point': {'key': 'sharePoint', 'type': 'OfficeDataConnectorDataTypesSharePoint'},
+        'teams': {'key': 'teams', 'type': 'OfficeDataConnectorDataTypesTeams'},
     }
 
-    def __init__(self, *, exchange=None, share_point=None, **kwargs) -> None:
+    def __init__(self, *, exchange=None, share_point=None, teams=None, **kwargs) -> None:
         super(OfficeDataConnectorDataTypes, self).__init__(**kwargs)
         self.exchange = exchange
         self.share_point = share_point
+        self.teams = teams
