@@ -85,8 +85,15 @@ try:
     from .incident_label_py3 import IncidentLabel
     from .incident_owner_info_py3 import IncidentOwnerInfo
     from .incident_py3 import Incident
+    from .hunting_bookmark_py3 import HuntingBookmark
+    from .security_alert_properties_confidence_reasons_item_py3 import SecurityAlertPropertiesConfidenceReasonsItem
+    from .security_alert_py3 import SecurityAlert
+    from .incident_alert_list_py3 import IncidentAlertList
+    from .incident_bookmark_list_py3 import IncidentBookmarkList
     from .incident_comment_py3 import IncidentComment
     from .incident_comment_list_py3 import IncidentCommentList
+    from .incident_entities_results_metadata_py3 import IncidentEntitiesResultsMetadata
+    from .incident_entities_response_py3 import IncidentEntitiesResponse
     from .incident_list_py3 import IncidentList
     from .threat_intelligence_py3 import ThreatIntelligence
     from .ip_entity_py3 import IpEntity
@@ -100,10 +107,13 @@ try:
     from .microsoft_security_incident_creation_alert_rule_py3 import MicrosoftSecurityIncidentCreationAlertRule
     from .microsoft_security_incident_creation_alert_rule_common_properties_py3 import MicrosoftSecurityIncidentCreationAlertRuleCommonProperties
     from .microsoft_security_incident_creation_alert_rule_template_py3 import MicrosoftSecurityIncidentCreationAlertRuleTemplate
+    from .office_atp_data_connector_py3 import OfficeATPDataConnector
+    from .office_atp_check_requirements_py3 import OfficeATPCheckRequirements
     from .office_consent_py3 import OfficeConsent
     from .office_consent_list_py3 import OfficeConsentList
     from .office_data_connector_data_types_exchange_py3 import OfficeDataConnectorDataTypesExchange
     from .office_data_connector_data_types_share_point_py3 import OfficeDataConnectorDataTypesSharePoint
+    from .office_data_connector_data_types_teams_py3 import OfficeDataConnectorDataTypesTeams
     from .office_data_connector_data_types_py3 import OfficeDataConnectorDataTypes
     from .office_data_connector_py3 import OfficeDataConnector
     from .operation_display_py3 import OperationDisplay
@@ -122,8 +132,6 @@ try:
     from .event_grouping_settings_py3 import EventGroupingSettings
     from .scheduled_alert_rule_common_properties_py3 import ScheduledAlertRuleCommonProperties
     from .scheduled_alert_rule_template_py3 import ScheduledAlertRuleTemplate
-    from .security_alert_properties_confidence_reasons_item_py3 import SecurityAlertPropertiesConfidenceReasonsItem
-    from .security_alert_py3 import SecurityAlert
     from .security_group_entity_py3 import SecurityGroupEntity
     from .settings_py3 import Settings
     from .setting_list_py3 import SettingList
@@ -144,6 +152,20 @@ try:
     from .watchlist_item_py3 import WatchlistItem
     from .watchlist_py3 import Watchlist
     from .watchlist_list_py3 import WatchlistList
+    from .threat_intelligence_resource_py3 import ThreatIntelligenceResource
+    from .threat_intelligence_resource_list_py3 import ThreatIntelligenceResourceList
+    from .threat_intelligence_kill_chain_phase_py3 import ThreatIntelligenceKillChainPhase
+    from .threat_intelligence_granular_marking_model_py3 import ThreatIntelligenceGranularMarkingModel
+    from .threat_intelligence_indicator_model_py3 import ThreatIntelligenceIndicatorModel
+    from .threat_intelligence_indicator_without_read_only_fields_py3 import ThreatIntelligenceIndicatorWithoutReadOnlyFields
+    from .threat_intelligence_resource_kind1_py3 import ThreatIntelligenceResourceKind1
+    from .threat_intelligence_arm_stix_sort_by1_py3 import ThreatIntelligenceArmStixSortBy1
+    from .threat_intelligence_arm_stix_query_py3 import ThreatIntelligenceArmStixQuery
+    from .threat_intelligence_append_tags_request_body_py3 import ThreatIntelligenceAppendTagsRequestBody
+    from .threat_intelligence_metric_entity_py3 import ThreatIntelligenceMetricEntity
+    from .threat_intelligence_metric_py3 import ThreatIntelligenceMetric
+    from .threat_intelligence_metric_resource_py3 import ThreatIntelligenceMetricResource
+    from .threat_intelligence_metric_resource_list_py3 import ThreatIntelligenceMetricResourceList
 except (SyntaxError, ImportError):
     from .alerts_data_type_of_data_connector_alerts import AlertsDataTypeOfDataConnectorAlerts
     from .alerts_data_type_of_data_connector import AlertsDataTypeOfDataConnector
@@ -224,8 +246,15 @@ except (SyntaxError, ImportError):
     from .incident_label import IncidentLabel
     from .incident_owner_info import IncidentOwnerInfo
     from .incident import Incident
+    from .hunting_bookmark import HuntingBookmark
+    from .security_alert_properties_confidence_reasons_item import SecurityAlertPropertiesConfidenceReasonsItem
+    from .security_alert import SecurityAlert
+    from .incident_alert_list import IncidentAlertList
+    from .incident_bookmark_list import IncidentBookmarkList
     from .incident_comment import IncidentComment
     from .incident_comment_list import IncidentCommentList
+    from .incident_entities_results_metadata import IncidentEntitiesResultsMetadata
+    from .incident_entities_response import IncidentEntitiesResponse
     from .incident_list import IncidentList
     from .threat_intelligence import ThreatIntelligence
     from .ip_entity import IpEntity
@@ -239,10 +268,13 @@ except (SyntaxError, ImportError):
     from .microsoft_security_incident_creation_alert_rule import MicrosoftSecurityIncidentCreationAlertRule
     from .microsoft_security_incident_creation_alert_rule_common_properties import MicrosoftSecurityIncidentCreationAlertRuleCommonProperties
     from .microsoft_security_incident_creation_alert_rule_template import MicrosoftSecurityIncidentCreationAlertRuleTemplate
+    from .office_atp_data_connector import OfficeATPDataConnector
+    from .office_atp_check_requirements import OfficeATPCheckRequirements
     from .office_consent import OfficeConsent
     from .office_consent_list import OfficeConsentList
     from .office_data_connector_data_types_exchange import OfficeDataConnectorDataTypesExchange
     from .office_data_connector_data_types_share_point import OfficeDataConnectorDataTypesSharePoint
+    from .office_data_connector_data_types_teams import OfficeDataConnectorDataTypesTeams
     from .office_data_connector_data_types import OfficeDataConnectorDataTypes
     from .office_data_connector import OfficeDataConnector
     from .operation_display import OperationDisplay
@@ -261,8 +293,6 @@ except (SyntaxError, ImportError):
     from .event_grouping_settings import EventGroupingSettings
     from .scheduled_alert_rule_common_properties import ScheduledAlertRuleCommonProperties
     from .scheduled_alert_rule_template import ScheduledAlertRuleTemplate
-    from .security_alert_properties_confidence_reasons_item import SecurityAlertPropertiesConfidenceReasonsItem
-    from .security_alert import SecurityAlert
     from .security_group_entity import SecurityGroupEntity
     from .settings import Settings
     from .setting_list import SettingList
@@ -283,6 +313,20 @@ except (SyntaxError, ImportError):
     from .watchlist_item import WatchlistItem
     from .watchlist import Watchlist
     from .watchlist_list import WatchlistList
+    from .threat_intelligence_resource import ThreatIntelligenceResource
+    from .threat_intelligence_resource_list import ThreatIntelligenceResourceList
+    from .threat_intelligence_kill_chain_phase import ThreatIntelligenceKillChainPhase
+    from .threat_intelligence_granular_marking_model import ThreatIntelligenceGranularMarkingModel
+    from .threat_intelligence_indicator_model import ThreatIntelligenceIndicatorModel
+    from .threat_intelligence_indicator_without_read_only_fields import ThreatIntelligenceIndicatorWithoutReadOnlyFields
+    from .threat_intelligence_resource_kind1 import ThreatIntelligenceResourceKind1
+    from .threat_intelligence_arm_stix_sort_by1 import ThreatIntelligenceArmStixSortBy1
+    from .threat_intelligence_arm_stix_query import ThreatIntelligenceArmStixQuery
+    from .threat_intelligence_append_tags_request_body import ThreatIntelligenceAppendTagsRequestBody
+    from .threat_intelligence_metric_entity import ThreatIntelligenceMetricEntity
+    from .threat_intelligence_metric import ThreatIntelligenceMetric
+    from .threat_intelligence_metric_resource import ThreatIntelligenceMetricResource
+    from .threat_intelligence_metric_resource_list import ThreatIntelligenceMetricResourceList
 from .security_insights_enums import (
     AlertRuleKind,
     TemplateStatus,
@@ -307,6 +351,10 @@ from .security_insights_enums import (
     IncidentLabelType,
     IncidentSeverity,
     IncidentStatus,
+    ConfidenceLevel,
+    ConfidenceScoreStatus,
+    KillChainIntent,
+    AlertStatus,
     MicrosoftSecurityProductName,
     ElevationToken,
     RegistryHive,
@@ -314,13 +362,11 @@ from .security_insights_enums import (
     EntitiesMatchingMethod,
     GroupingEntityType,
     EventGroupingAggregationKind,
-    ConfidenceLevel,
-    ConfidenceScoreStatus,
-    KillChainIntent,
-    AlertStatus,
     SettingKind,
     UebaDataSources,
     Source,
+    ThreatIntelligenceResourceKind,
+    ThreatIntelligenceArmStixSortBy,
 )
 
 __all__ = [
@@ -403,8 +449,15 @@ __all__ = [
     'IncidentLabel',
     'IncidentOwnerInfo',
     'Incident',
+    'HuntingBookmark',
+    'SecurityAlertPropertiesConfidenceReasonsItem',
+    'SecurityAlert',
+    'IncidentAlertList',
+    'IncidentBookmarkList',
     'IncidentComment',
     'IncidentCommentList',
+    'IncidentEntitiesResultsMetadata',
+    'IncidentEntitiesResponse',
     'IncidentList',
     'ThreatIntelligence',
     'IpEntity',
@@ -418,10 +471,13 @@ __all__ = [
     'MicrosoftSecurityIncidentCreationAlertRule',
     'MicrosoftSecurityIncidentCreationAlertRuleCommonProperties',
     'MicrosoftSecurityIncidentCreationAlertRuleTemplate',
+    'OfficeATPDataConnector',
+    'OfficeATPCheckRequirements',
     'OfficeConsent',
     'OfficeConsentList',
     'OfficeDataConnectorDataTypesExchange',
     'OfficeDataConnectorDataTypesSharePoint',
+    'OfficeDataConnectorDataTypesTeams',
     'OfficeDataConnectorDataTypes',
     'OfficeDataConnector',
     'OperationDisplay',
@@ -440,8 +496,6 @@ __all__ = [
     'EventGroupingSettings',
     'ScheduledAlertRuleCommonProperties',
     'ScheduledAlertRuleTemplate',
-    'SecurityAlertPropertiesConfidenceReasonsItem',
-    'SecurityAlert',
     'SecurityGroupEntity',
     'Settings',
     'SettingList',
@@ -462,6 +516,20 @@ __all__ = [
     'WatchlistItem',
     'Watchlist',
     'WatchlistList',
+    'ThreatIntelligenceResource',
+    'ThreatIntelligenceResourceList',
+    'ThreatIntelligenceKillChainPhase',
+    'ThreatIntelligenceGranularMarkingModel',
+    'ThreatIntelligenceIndicatorModel',
+    'ThreatIntelligenceIndicatorWithoutReadOnlyFields',
+    'ThreatIntelligenceResourceKind1',
+    'ThreatIntelligenceArmStixSortBy1',
+    'ThreatIntelligenceArmStixQuery',
+    'ThreatIntelligenceAppendTagsRequestBody',
+    'ThreatIntelligenceMetricEntity',
+    'ThreatIntelligenceMetric',
+    'ThreatIntelligenceMetricResource',
+    'ThreatIntelligenceMetricResourceList',
     'AlertRuleKind',
     'TemplateStatus',
     'TriggerOperator',
@@ -485,6 +553,10 @@ __all__ = [
     'IncidentLabelType',
     'IncidentSeverity',
     'IncidentStatus',
+    'ConfidenceLevel',
+    'ConfidenceScoreStatus',
+    'KillChainIntent',
+    'AlertStatus',
     'MicrosoftSecurityProductName',
     'ElevationToken',
     'RegistryHive',
@@ -492,11 +564,9 @@ __all__ = [
     'EntitiesMatchingMethod',
     'GroupingEntityType',
     'EventGroupingAggregationKind',
-    'ConfidenceLevel',
-    'ConfidenceScoreStatus',
-    'KillChainIntent',
-    'AlertStatus',
     'SettingKind',
     'UebaDataSources',
     'Source',
+    'ThreatIntelligenceResourceKind',
+    'ThreatIntelligenceArmStixSortBy',
 ]

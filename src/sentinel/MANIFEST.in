@@ -4,3 +4,6 @@ include azext_sentinel/default_data_source_template.yaml
 include azext_sentinel/default_detection_documentation.md
 include azext_sentinel/default_detection_schema.yaml
 include azext_sentinel/default_detection_template.yaml
+include azext_sentinel/default_msft_security_detection_schema.yaml
+include azext_sentinel/default_msft_security_detection_template.yaml
+include azdext_sentinel/default_msft_security_detection_documentation.md

@@ -51,7 +51,8 @@ class MicrosoftSecurityIncidentCreationAlertRuleTemplate(AlertRuleTemplate):
      cases will be generated. Possible values include: 'Microsoft Cloud App
      Security', 'Azure Security Center', 'Azure Advanced Threat Protection',
      'Azure Active Directory Identity Protection', 'Azure Security Center for
-     IoT'
+     IoT', 'Office 365 Advanced Threat Protection', 'Microsoft Defender
+     Advanced Threat Protection'
     :type product_filter: str or
      ~securityinsights.models.MicrosoftSecurityProductName
     :param severities_filter: the alerts' severities on which the cases will

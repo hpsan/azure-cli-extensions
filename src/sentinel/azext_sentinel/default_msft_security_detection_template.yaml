@@ -1,0 +1,37 @@
+# Azure resource Id
+id: <PLACEHOLDER>
+
+# [Mandatory] The description of the detection
+description: <PLACEHOLDER>
+
+# [Mandatory] The display name for alerts created by this detection
+display_name: <PLACEHOLDER>
+
+# [Mandatory] Determines whether this detection is enabled or disabled
+enabled: true
+
+# [Optional] The alerts' display names on which the cases will be generated
+# Please remove the parameter if not applicable
+display_names_filter:
+  - <PLACEHOLDER>
+
+# [Optional] The alerts' display names on which the cases will NOT be generated
+# Please remove the parameter if not applicable
+display_names_exclude_filter:
+  - <PLACEHOLDER>
+
+    # [Mandatory] Microsoft Security Product Name associated with this detection
+    # Options:
+    # - "Microsoft Cloud App Security"
+    # - "Azure Security Center"
+    # - "Azure Advanced Threat Protection"
+    # - "Azure Active Directory Identity Protection"
+    # - "Azure Security Center for IoT"
+product_filter: <PLACEHOLDER>
+
+# [Optional] List of severities filter for this detection.
+# Options: High, Medium, Low, Informational
+# Please remove the parameter if you want to filter on any severities
+severities_filter:
+  - <PLACEHOLDER>
+

@@ -140,6 +140,7 @@ class DataConnectorKind(str, Enum):
     threat_intelligence = "ThreatIntelligence"
     threat_intelligence_taxii = "ThreatIntelligenceTaxii"
     office365 = "Office365"
+    office_atp = "OfficeATP"
     amazon_web_services_cloud_trail = "AmazonWebServicesCloudTrail"
     azure_advanced_threat_protection = "AzureAdvancedThreatProtection"
     microsoft_defender_advanced_threat_protection = "MicrosoftDefenderAdvancedThreatProtection"
@@ -220,6 +221,48 @@ class IncidentStatus(str, Enum):
     closed = "Closed"  #: A non-active incident
 
 
+class ConfidenceLevel(str, Enum):
+
+    unknown = "Unknown"  #: Unknown confidence, the is the default value
+    low = "Low"  #: Low confidence, meaning we have some doubts this is indeed malicious or part of an attack
+    high = "High"  #: High confidence that the alert is true positive malicious
+
+
+class ConfidenceScoreStatus(str, Enum):
+
+    not_applicable = "NotApplicable"  #: Score will not be calculated for this alert as it is not supported by virtual analyst
+    in_process = "InProcess"  #: No score was set yet and calculation is in progress
+    not_final = "NotFinal"  #: Score is calculated and shown as part of the alert, but may be updated again at a later time following the processing of additional data
+    final = "Final"  #: Final score was calculated and available
+
+
+class KillChainIntent(str, Enum):
+
+    unknown = "Unknown"  #: The default value.
+    probing = "Probing"  #: Probing could be an attempt to access a certain resource regardless of a malicious intent or a failed attempt to gain access to a target system to gather information prior to exploitation. This step is usually detected as an attempt originating from outside the network in attempt to scan the target system and find a way in.
+    exploitation = "Exploitation"  #: Exploitation is the stage where an attacker manage to get foothold on the attacked resource. This stage is applicable not only for compute hosts, but also for resources such as user accounts, certificates etc. Adversaries will often be able to control the resource after this stage.
+    persistence = "Persistence"  #: Persistence is any access, action, or configuration change to a system that gives an adversary a persistent presence on that system. Adversaries will often need to maintain access to systems through interruptions such as system restarts, loss of credentials, or other failures that would require a remote access tool to restart or alternate backdoor for them to regain access.
+    privilege_escalation = "PrivilegeEscalation"  #: Privilege escalation is the result of actions that allow an adversary to obtain a higher level of permissions on a system or network. Certain tools or actions require a higher level of privilege to work and are likely necessary at many points throughout an operation. User accounts with permissions to access specific systems or perform specific functions necessary for adversaries to achieve their objective may also be considered an escalation of privilege.
+    defense_evasion = "DefenseEvasion"  #: Defense evasion consists of techniques an adversary may use to evade detection or avoid other defenses. Sometimes these actions are the same as or variations of techniques in other categories that have the added benefit of subverting a particular defense or mitigation.
+    credential_access = "CredentialAccess"  #: Credential access represents techniques resulting in access to or control over system, domain, or service credentials that are used within an enterprise environment. Adversaries will likely attempt to obtain legitimate credentials from users or administrator accounts (local system administrator or domain users with administrator access) to use within the network. With sufficient access within a network, an adversary can create accounts for later use within the environment.
+    discovery = "Discovery"  #: Discovery consists of techniques that allow the adversary to gain knowledge about the system and internal network. When adversaries gain access to a new system, they must orient themselves to what they now have control of and what benefits operating from that system give to their current objective or overall goals during the intrusion. The operating system provides many native tools that aid in this post-compromise information-gathering phase.
+    lateral_movement = "LateralMovement"  #: Lateral movement consists of techniques that enable an adversary to access and control remote systems on a network and could, but does not necessarily, include execution of tools on remote systems. The lateral movement techniques could allow an adversary to gather information from a system without needing additional tools, such as a remote access tool. An adversary can use lateral movement for many purposes, including remote Execution of tools, pivoting to additional systems, access to specific information or files, access to additional credentials, or to cause an effect.
+    execution = "Execution"  #: The execution tactic represents techniques that result in execution of adversary-controlled code on a local or remote system. This tactic is often used in conjunction with lateral movement to expand access to remote systems on a network.
+    collection = "Collection"  #: Collection consists of techniques used to identify and gather information, such as sensitive files, from a target network prior to exfiltration. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.
+    exfiltration = "Exfiltration"  #: Exfiltration refers to techniques and attributes that result or aid in the adversary removing files and information from a target network. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.
+    command_and_control = "CommandAndControl"  #: The command and control tactic represents how adversaries communicate with systems under their control within a target network.
+    impact = "Impact"  #: The impact intent primary objective is to directly reduce the availability or integrity of a system, service, or network; including manipulation of data to impact a business or operational process. This would often refer to techniques such as ransom-ware, defacement, data manipulation and others.
+
+
+class AlertStatus(str, Enum):
+
+    unknown = "Unknown"  #: Unknown value
+    new = "New"  #: New alert
+    resolved = "Resolved"  #: Alert closed after handling
+    dismissed = "Dismissed"  #: Alert dismissed as false positive
+    in_progress = "InProgress"  #: Alert is being handled
+
+
 class MicrosoftSecurityProductName(str, Enum):
 
     microsoft_cloud_app_security = "Microsoft Cloud App Security"
@@ -227,6 +270,8 @@ class MicrosoftSecurityProductName(str, Enum):
     azure_advanced_threat_protection = "Azure Advanced Threat Protection"
     azure_active_directory_identity_protection = "Azure Active Directory Identity Protection"
     azure_security_centerfor_io_t = "Azure Security Center for IoT"
+    office365_advanced_threat_protection = "Office 365 Advanced Threat Protection"
+    microsoft_defender_advanced_threat_protection = "Microsoft Defender Advanced Threat Protection"
 
 
 class ElevationToken(str, Enum):
@@ -283,48 +328,6 @@ class EventGroupingAggregationKind(str, Enum):
     alert_per_result = "AlertPerResult"
 
 
-class ConfidenceLevel(str, Enum):
-
-    unknown = "Unknown"  #: Unknown confidence, the is the default value
-    low = "Low"  #: Low confidence, meaning we have some doubts this is indeed malicious or part of an attack
-    high = "High"  #: High confidence that the alert is true positive malicious
-
-
-class ConfidenceScoreStatus(str, Enum):
-
-    not_applicable = "NotApplicable"  #: Score will not be calculated for this alert as it is not supported by virtual analyst
-    in_process = "InProcess"  #: No score was set yet and calculation is in progress
-    not_final = "NotFinal"  #: Score is calculated and shown as part of the alert, but may be updated again at a later time following the processing of additional data
-    final = "Final"  #: Final score was calculated and available
-
-
-class KillChainIntent(str, Enum):
-
-    unknown = "Unknown"  #: The default value.
-    probing = "Probing"  #: Probing could be an attempt to access a certain resource regardless of a malicious intent or a failed attempt to gain access to a target system to gather information prior to exploitation. This step is usually detected as an attempt originating from outside the network in attempt to scan the target system and find a way in.
-    exploitation = "Exploitation"  #: Exploitation is the stage where an attacker manage to get foothold on the attacked resource. This stage is applicable not only for compute hosts, but also for resources such as user accounts, certificates etc. Adversaries will often be able to control the resource after this stage.
-    persistence = "Persistence"  #: Persistence is any access, action, or configuration change to a system that gives an adversary a persistent presence on that system. Adversaries will often need to maintain access to systems through interruptions such as system restarts, loss of credentials, or other failures that would require a remote access tool to restart or alternate backdoor for them to regain access.
-    privilege_escalation = "PrivilegeEscalation"  #: Privilege escalation is the result of actions that allow an adversary to obtain a higher level of permissions on a system or network. Certain tools or actions require a higher level of privilege to work and are likely necessary at many points throughout an operation. User accounts with permissions to access specific systems or perform specific functions necessary for adversaries to achieve their objective may also be considered an escalation of privilege.
-    defense_evasion = "DefenseEvasion"  #: Defense evasion consists of techniques an adversary may use to evade detection or avoid other defenses. Sometimes these actions are the same as or variations of techniques in other categories that have the added benefit of subverting a particular defense or mitigation.
-    credential_access = "CredentialAccess"  #: Credential access represents techniques resulting in access to or control over system, domain, or service credentials that are used within an enterprise environment. Adversaries will likely attempt to obtain legitimate credentials from users or administrator accounts (local system administrator or domain users with administrator access) to use within the network. With sufficient access within a network, an adversary can create accounts for later use within the environment.
-    discovery = "Discovery"  #: Discovery consists of techniques that allow the adversary to gain knowledge about the system and internal network. When adversaries gain access to a new system, they must orient themselves to what they now have control of and what benefits operating from that system give to their current objective or overall goals during the intrusion. The operating system provides many native tools that aid in this post-compromise information-gathering phase.
-    lateral_movement = "LateralMovement"  #: Lateral movement consists of techniques that enable an adversary to access and control remote systems on a network and could, but does not necessarily, include execution of tools on remote systems. The lateral movement techniques could allow an adversary to gather information from a system without needing additional tools, such as a remote access tool. An adversary can use lateral movement for many purposes, including remote Execution of tools, pivoting to additional systems, access to specific information or files, access to additional credentials, or to cause an effect.
-    execution = "Execution"  #: The execution tactic represents techniques that result in execution of adversary-controlled code on a local or remote system. This tactic is often used in conjunction with lateral movement to expand access to remote systems on a network.
-    collection = "Collection"  #: Collection consists of techniques used to identify and gather information, such as sensitive files, from a target network prior to exfiltration. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.
-    exfiltration = "Exfiltration"  #: Exfiltration refers to techniques and attributes that result or aid in the adversary removing files and information from a target network. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.
-    command_and_control = "CommandAndControl"  #: The command and control tactic represents how adversaries communicate with systems under their control within a target network.
-    impact = "Impact"  #: The impact intent primary objective is to directly reduce the availability or integrity of a system, service, or network; including manipulation of data to impact a business or operational process. This would often refer to techniques such as ransom-ware, defacement, data manipulation and others.
-
-
-class AlertStatus(str, Enum):
-
-    unknown = "Unknown"  #: Unknown value
-    new = "New"  #: New alert
-    resolved = "Resolved"  #: Alert closed after handling
-    dismissed = "Dismissed"  #: Alert dismissed as false positive
-    in_progress = "InProgress"  #: Alert is being handled
-
-
 class SettingKind(str, Enum):
 
     eyes_on = "EyesOn"
@@ -344,3 +347,15 @@ class Source(str, Enum):
 
     localfile = "Local file"
     remotestorage = "Remote storage"
+
+
+class ThreatIntelligenceResourceKind(str, Enum):
+
+    indicator = "indicator"  #: Entity represents threat intelligence indicator in the system.
+
+
+class ThreatIntelligenceArmStixSortBy(str, Enum):
+
+    unsorted = "unsorted"
+    ascending = "ascending"
+    descending = "descending"

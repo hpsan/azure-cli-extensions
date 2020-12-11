@@ -7,32 +7,44 @@
 from knack.help_files import helps  # pylint: disable=unused-import
 
 
-helps['sentinel'] = """
+helps[
+    "sentinel"
+] = """
     type: group
     short-summary: Commands to manage Sentinels.
 """
 
-helps['sentinel create'] = """
+helps[
+    "sentinel create"
+] = """
     type: command
-    short-summary: Create a Sentinel.
+    short-summary: Create a Sentinel resource.
 """
 
-helps['sentinel list'] = """
+helps[
+    "sentinel list"
+] = """
     type: command
     short-summary: List Sentinels.
 """
 
-helps['sentinel delete'] = """
+helps[
+    "sentinel delete"
+] = """
     type: command
-    short-summary: Delete a Sentinel.
+    short-summary: Delete a Sentinel resource.
 """
 
-helps['sentinel show'] = """
+helps[
+    "sentinel show"
+] = """
     type: command
     short-summary: Show details of a Sentinel.
 """
 
-helps['sentinel update'] = """
+helps[
+    "sentinel update"
+] = """
     type: command
-    short-summary: Update a Sentinel.
+    short-summary: Update a Sentinel resource.
 """
