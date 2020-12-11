@@ -156,7 +156,6 @@ def _link_playbook(
     playbook_info: PlaybookInfo,
 ) -> ActionResponse:
 
-    _unlink_playbooks(security_client=multi_tenant_client, rule_id=rule_id)
     action_request = multi_tenant_client.get_playbook_action_request(
         playbook_info=playbook_info
     )
@@ -197,12 +196,13 @@ def _deploy_resource(
             operation_id=resource_params.rule_id,
             operation=resource_params.alert_rule,
         )
-        if resource_params.playbook_info:
-            _link_playbook(
-                multi_tenant_client=client,
-                rule_id=resource_params.rule_id,
-                playbook_info=resource_params.playbook_info,
-            )
+        if resource_params.playbooks:
+            for playbook in resource_params.playbooks:
+                _link_playbook(
+                    multi_tenant_client=client,
+                    rule_id=resource_params.rule_id,
+                    playbook_info=playbook,
+                )
         else:
             _unlink_playbooks(security_client=client, rule_id=resource_params.rule_id)
         return created_or_updated_detection

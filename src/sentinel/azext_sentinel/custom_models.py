@@ -12,7 +12,7 @@ from azext_sentinel.vendored_sdks.security_insights.models import (
 
 from .constants import ResourceType
 
-PLAYBOOK_KEY = "playbook"
+PLAYBOOK_KEY = "playbooks"
 ADDITIONAL_METADATA_KEY = "additional_metadata"
 ID_KEY = "id"
 FUNCTION_ID_KEY = "function_id"
@@ -119,8 +119,8 @@ class ScheduledDetectionParams(DetectionParams):
     """Encapsulate scheduled detection configuration parameters"""
 
     def __init__(self, **kwargs):
-        playbook = kwargs.pop(PLAYBOOK_KEY, None)
-        self.playbook_info = PlaybookInfo(**playbook) if playbook else None
+        playbooks = kwargs.pop(PLAYBOOK_KEY, None)
+        self.playbooks = [PlaybookInfo(**playbook) for playbook in playbooks] if playbooks else None
         self.additional_metadata = kwargs.pop(ADDITIONAL_METADATA_KEY, None)
         super().__init__(**kwargs)
         self.alert_rule = ScheduledAlertRule(**kwargs)
